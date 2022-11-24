@@ -1,0 +1,20 @@
+[2022-10-31 22:52:58,527] {dag_processing.py:590} INFO - Processing files using up to 2 processes at a time 
+[2022-10-31 22:52:58,528] {dag_processing.py:591} INFO - Process each file at most once every 0 seconds
+[2022-10-31 22:52:58,529] {dag_processing.py:593} INFO - Checking for new files in /opt/airflow/dags every 300 seconds
+[2022-10-31 22:52:58,530] {dag_processing.py:726} INFO - Searching for files in /opt/airflow/dags
+[2022-10-31 22:52:58,532] {dag_processing.py:729} INFO - There are 0 files in /opt/airflow/dags
+[2022-10-31 22:52:58,571] {dag_processing.py:1062} INFO - Finding 'running' jobs without a recent heartbeat
+[2022-10-31 22:52:58,572] {dag_processing.py:1066} INFO - Failing jobs without heartbeat after 2022-10-31 22:47:58.572789+00:00
+[2022-10-31 22:53:08,604] {dag_processing.py:1062} INFO - Finding 'running' jobs without a recent heartbeat
+[2022-10-31 22:53:08,605] {dag_processing.py:1066} INFO - Failing jobs without heartbeat after 2022-10-31 22:48:08.605326+00:00
+[2022-10-31 22:53:18,643] {dag_processing.py:1062} INFO - Finding 'running' jobs without a recent heartbeat
+[2022-10-31 22:53:18,647] {dag_processing.py:1066} INFO - Failing jobs without heartbeat after 2022-10-31 22:48:18.647272+00:00
+[2022-10-31 22:53:28,682] {dag_processing.py:1062} INFO - Finding 'running' jobs without a recent heartbeat
+[2022-10-31 22:53:28,684] {dag_processing.py:1066} INFO - Failing jobs without heartbeat after 2022-10-31 22:48:28.684681+00:00
+[2022-10-31 22:53:38,732] {dag_processing.py:1062} INFO - Finding 'running' jobs without a recent heartbeat
+[2022-10-31 22:53:38,733] {dag_processing.py:1066} INFO - Failing jobs without heartbeat after 2022-10-31 22:48:38.733741+00:00
+[2022-10-31 22:53:48,766] {dag_processing.py:1062} INFO - Finding 'running' jobs without a recent heartbeat
+[2022-10-31 22:53:48,768] {dag_processing.py:1066} INFO - Failing jobs without heartbeat after 2022-10-31 22:48:48.768652+00:00
+[2022-10-31 22:53:58,816] {dag_processing.py:1062} INFO - Finding 'running' jobs without a recent heartbeat
+[2022-10-31 22:53:58,819] {dag_processing.py:1066} INFO - Failing jobs without heartbeat after 2022-10-31 22:48:58.819007+00:00
+[2022-10-31 22:54:00,502] {dag_processing.py:571} INFO - Exiting gracefully upon receiving signal 15
