@@ -1,0 +1,134 @@
+schema: '2.0'
+stages:
+  load_data:
+    cmd: PYTHONPATH="." python project/load_data/load_data.py --config-path params.yaml
+    deps:
+    - path: project/load_data/load_data.py
+      md5: 474695a412bc3bb5de28cd968d130b8f
+      size: 990
+    outs:
+    - path: data/load_raw
+      md5: 367fd690a76a537d38ddd21dce065eab.dir
+      size: 3739
+      nfiles: 2
+  prepair_target:
+    cmd: PYTHONPATH="." python project/prepair_target/prepair_target.py --config-path
+      params.yaml
+    deps:
+    - path: data/load_raw
+      md5: 367fd690a76a537d38ddd21dce065eab.dir
+      size: 3739
+      nfiles: 2
+    - path: project/prepair_target/prepair_target.py
+      md5: 6fa849da757793bee5525d7545d988fc
+      size: 1083
+    params:
+      params.yaml:
+        prepare_target:
+          target_group: target_easy
+    outs:
+    - path: data/prepare_targets
+      md5: c56c01208ce7ab555709ebf125eb3639.dir
+      size: 503
+      nfiles: 1
+  prepair_features:
+    cmd: PYTHONPATH="." python project/prepair_features/prepair_features.py --config-path
+      params.yaml
+    deps:
+    - path: data/load_raw
+      md5: 367fd690a76a537d38ddd21dce065eab.dir
+      size: 3739
+      nfiles: 2
+    - path: project/prepair_features/prepair_features.py
+      md5: a410381615cf505a7c4c72fdcf5037a0
+      size: 1200
+    params:
+      params.yaml:
+        prepare_features:
+          features_group: sepal_group
+    outs:
+    - path: data/prepare_features
+      md5: 6d0ea74bf0556c681c43770e6000bb5b.dir
+      size: 1716
+      nfiles: 1
+  merge:
+    cmd: PYTHONPATH="." python project/merge/merge.py --config-path params.yaml
+    deps:
+    - path: data/prepare_features
+      md5: 6d0ea74bf0556c681c43770e6000bb5b.dir
+      size: 1716
+      nfiles: 1
+    - path: data/prepare_targets
+      md5: c56c01208ce7ab555709ebf125eb3639.dir
+      size: 503
+      nfiles: 1
+    - path: project/merge/merge.py
+      md5: 1b8765552b8962ad7509af895dd0bf54
+      size: 979
+    params:
+      params.yaml:
+        joined:
+          how: inner
+    outs:
+    - path: data/joined
+      md5: bbd9ef4590b52b13bf2cf482eb3a2c54.dir
+      size: 1027
+      nfiles: 1
+  prepair_dataset:
+    cmd: PYTHONPATH="." python project/prepair_dataset/prepair_dataset.py --config-path
+      params.yaml
+    deps:
+    - path: data/joined
+      md5: bbd9ef4590b52b13bf2cf482eb3a2c54.dir
+      size: 1027
+      nfiles: 1
+    - path: project/prepair_dataset/prepair_dataset.py
+      md5: c3f82507dd5c2aa51fd234ecd7606c04
+      size: 1008
+    params:
+      params.yaml:
+        prepare_dataset:
+          ratio: 0.95
+    outs:
+    - path: data/prepare_dataset
+      md5: c8d733910527dac4b26c1c658304d8c0.dir
+      size: 1054
+      nfiles: 2
+  train_models:
+    cmd: PYTHONPATH="." python project/train_model/train_model.py --config-path params.yaml
+    deps:
+    - path: data/prepare_dataset
+      md5: c8d733910527dac4b26c1c658304d8c0.dir
+      size: 1054
+      nfiles: 2
+    - path: project/train_model/train_model.py
+      md5: a7b8cf182d6df7a284665191c70c7f98
+      size: 1223
+    params:
+      params.yaml:
+        train_model:
+          model_name: decision_tree
+    outs:
+    - path: data/metrics/train_metrics.json
+      md5: e4c2e8edac362acab7123654b9e73432
+      size: 3
+    - path: data/train_model
+      md5: 6bbdccd0d3c6ba009ceeb2fdbc7a3557.dir
+      size: 1381
+      nfiles: 1
+  eval_model:
+    cmd: PYTHONPATH="." python project/eval_model/eval_model.py --config-path params.yaml
+    deps:
+    - path: data/train_model
+      md5: 6bbdccd0d3c6ba009ceeb2fdbc7a3557.dir
+      size: 1381
+      nfiles: 1
+    - path: project/eval_model/eval_model.py
+      md5: 7fcd597952d6c3216a0f69443eed53af
+      size: 1130
+    params:
+      params.yaml:
+        eval_model:
+          model_name: decision_tree
+          metrics:
+          - precision

@@ -1,33 +1,29 @@
 from enum import Enum
-from typing import Dict, Any, Union, Type
 
 import attr
 import pickle
 
 from sklearn.base import ClassifierMixin
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.svm import SVC
-from sklearn.linear_model import RidgeClassifier, LogisticRegression
-from abc import ABCMeta
+from sklearn.ensemble import RandomForestClassifier
 
 from project.config_from_file import ConfigFromArgs
-from project.constants import MODEL_SAVE_PATH
+from project.constants import TasksList
+
+
+TRAIN_MODEL = 'train_model'
 
 
 class ModelNames(str, Enum):
-    LOGISTIC_REGRESSION = 'logistic_regression'
-    RIDGE_REGRESSION = 'ridge_regression'
+    RANDOM_FOREST = 'random_forest'
     DECISION_TREE_MODEL = 'decision_tree'
-    SVC = 'svc'
 
 
 
 def get_model(model_name: ModelNames) -> ClassifierMixin:
     return {
-        ModelNames.RIDGE_REGRESSION: RidgeClassifier,
-        ModelNames.LOGISTIC_REGRESSION: LogisticRegression,
+        ModelNames.RANDOM_FOREST: RandomForestClassifier,
         ModelNames.DECISION_TREE_MODEL: DecisionTreeClassifier,
-        ModelNames.SVC: SVC,
     }[model_name]()
 
 
@@ -42,10 +38,10 @@ class Model:
         return self.model.predict(x)
 
     def log_model(self):
-        pickle.dump(self.model, open(MODEL_SAVE_PATH, 'wb'))
+        pickle.dump(self.model, open(TasksList.MODEL_SAVE_PATH, 'wb'))
 
     def load_model(self):
-        self.model = pickle.load(open(MODEL_SAVE_PATH, 'rb'))
+        self.model = pickle.load(open(TasksList.MODEL_SAVE_PATH, 'rb'))
 
     def get_score(self, x, y):
         return self.model.score(x, y)
@@ -53,4 +49,5 @@ class Model:
 
 @attr.s
 class TrainModelsConfig(ConfigFromArgs):
-    model_name: ModelNames = attr.ib(default=ModelNames.LOGISTIC_REGRESSION)
+    SECTION = TRAIN_MODEL
+    model_name: ModelNames = attr.ib()

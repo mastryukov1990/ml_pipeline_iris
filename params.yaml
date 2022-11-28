@@ -1,0 +1,22 @@
+data_dir: data
+
+prepare_features:
+  features_group: sepal_group
+
+prepare_target:
+  target_group: target_easy
+
+joined:
+  how: inner
+
+prepare_dataset:
+  ratio: 0.95
+
+train_model:
+  model_name: decision_tree
+
+eval_model:
+  model_name: decision_tree
+  metrics:
+    - precision
+

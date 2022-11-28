@@ -1,0 +1,73 @@
+vars:
+  - project/constants.py:TasksList
+  - project/constants.py:DATA_DIR
+  - python_path: .
+
+stages:
+  load_data:
+    cmd: PYTHONPATH="${python_path}" python project/load_data/load_data.py --config-path params.yaml
+    deps:
+      - project/load_data/load_data.py
+    outs:
+      - ${DATA_DIR}/${TasksList.LOAD_RAW_FOLDER_NAME}
+
+  prepair_features:
+    cmd: PYTHONPATH="${python_path}" python project/prepair_features/prepair_features.py --config-path params.yaml
+    params:
+      - prepare_features
+    deps:
+      - project/prepair_features/prepair_features.py
+      - ${DATA_DIR}/${TasksList.LOAD_RAW_FOLDER_NAME}
+    outs:
+      - ${DATA_DIR}/${TasksList.PREPARE_FEATURES_FOLDER_NAME}
+
+  prepair_target:
+    cmd: PYTHONPATH="${python_path}" python project/prepair_target/prepair_target.py --config-path params.yaml
+    params:
+      - prepare_target
+    deps:
+      - ${DATA_DIR}/${TasksList.LOAD_RAW_FOLDER_NAME}
+      - project/prepair_target/prepair_target.py
+    outs:
+      - ${DATA_DIR}/${TasksList.PREPARE_TARGETS_FOLDER_NAME}
+
+  merge:
+    cmd: PYTHONPATH="${python_path}" python project/merge/merge.py --config-path params.yaml
+    params:
+      - joined
+    deps:
+      - ${DATA_DIR}/${TasksList.PREPARE_TARGETS_FOLDER_NAME}
+      - ${DATA_DIR}/${TasksList.PREPARE_FEATURES_FOLDER_NAME}
+      - project/merge/merge.py
+    outs:
+      - ${DATA_DIR}/${TasksList.JOINED_FOLDER_NAME}
+
+  prepair_dataset:
+    cmd: PYTHONPATH="${python_path}" python project/prepair_dataset/prepair_dataset.py --config-path params.yaml
+    params:
+      - prepare_dataset
+    deps:
+      - project/prepair_dataset/prepair_dataset.py
+      - ${DATA_DIR}/${TasksList.JOINED_FOLDER_NAME}
+    outs:
+      - ${DATA_DIR}/${TasksList.PREPARE_DATASET_FOLDER_NAME}
+
+  train_models:
+    cmd: PYTHONPATH="${python_path}" python project/train_model/train_model.py --config-path params.yaml
+    params:
+      - train_model
+    deps:
+      - project/train_model/train_model.py
+      - ${DATA_DIR}/${TasksList.PREPARE_DATASET_FOLDER_NAME}
+    outs:
+      - ${DATA_DIR}/${TasksList.TRAIN_MODEL_FOLDER_NAME}
+    metrics:
+      - ${DATA_DIR}/${TasksList.METRIC_FOLDER}/train_metrics.json
+
+  eval_model:
+    cmd: PYTHONPATH="${python_path}" python project/eval_model/eval_model.py --config-path params.yaml
+    params:
+      - eval_model
+    deps:
+      - ${DATA_DIR}/${TasksList.TRAIN_MODEL_FOLDER_NAME}
+      - project/eval_model/eval_model.py

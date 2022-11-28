@@ -6,5 +6,5 @@ services:
             - "8088:8088"
         volumes:
             - ./:/app
-        command: /bin/bash -c "cd / && jupyter notebook --ip=0.0.0.0 --no-browser  --allow-root  --port=8088  --NotebookApp.token=lets_shivtanutsya"
+        command: /bin/bash -c "cd / && jupyter notebook --ip=0.0.0.0 --no-browser  --a/bin/bash -c "cd / && jupyter notebook --ip=0.0.0.0 --no-browser  --allow-root llow-root  --port=8088  --NotebookApp.token=lets_shivtanutsya"
         restart: unless-stopped

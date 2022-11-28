@@ -2,7 +2,7 @@ from enum import Enum
 
 import attr
 
-from project.config_from_file import ConfigFromFile, ConfigFromArgs
+from project.config_from_file import ConfigFromArgs
 from project.constants import INDEX_COLUMN
 
 PREPARE_FEATURES = 'prepare_features'
@@ -22,11 +22,7 @@ FEATURES = {
 
 
 @attr.s
-class PrepareFeaturesConfig(ConfigFromFile, ConfigFromArgs):
-    features_group: FeatureGroup = attr.ib()
+class PrepareFeaturesConfig(ConfigFromArgs):
+    SECTION = 'prepare_features'
 
-    @classmethod
-    def from_args(cls, args):
-        return cls(
-            features_group=args.features_group
-        ) if not args.config_path else cls.from_file(args.config_path, PREPARE_FEATURES)
+    features_group: FeatureGroup = attr.ib()

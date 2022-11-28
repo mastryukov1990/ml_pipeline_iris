@@ -2,3 +2,4 @@ scikit-learn==1.1.2
 pandas==1.5.1
 jupyter
 jupyter_contrib_nbextensions
+apache-airflow

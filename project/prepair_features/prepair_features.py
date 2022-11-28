@@ -3,8 +3,8 @@ from enum import Enum
 
 import pandas as pd
 
-from project.common import config_path_parser, get_logger
-from project.constants import FEATURES_IRIS_RAW, FEATURES_IRIS_PREPARED, INDEX_COLUMN
+from project.common import config_path_parser, get_logger, save_csv
+from project.constants import TasksList
 from project.prepair_features.config import PrepareFeaturesConfig, FEATURES, FeatureGroup
 
 
@@ -16,12 +16,12 @@ def get_feature_group_from_df(group_name: FeatureGroup, df: pd.DataFrame) -> pd.
 
 
 def prepare_features(config: PrepareFeaturesConfig):
-    features_df = pd.read_csv(FEATURES_IRIS_RAW)
+    features_df = pd.read_csv(TasksList.FEATURES_IRIS_RAW)
     features_df = get_feature_group_from_df(config.features_group, features_df)
 
     logger.info(f'features shape - {features_df.shape}')
 
-    features_df.to_csv(FEATURES_IRIS_PREPARED, index=False)
+    save_csv(TasksList.FEATURES_IRIS_PREPARED, features_df)
 
 
 def main():

@@ -14,4 +14,5 @@ class TargetGroup(str, Enum):
 
 @attr.s
 class PrepareTargetsConfig(ConfigFromArgs):
+    SECTION = 'prepare_target'
     target_group: TargetGroup = attr.ib(default=TargetGroup.EASY)

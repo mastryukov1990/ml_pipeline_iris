@@ -2,26 +2,46 @@ import os
 
 DATA_DIR = 'data'
 
+INDEX_COLUMN = 'index'
+TARGET_COLUMN = 'target'
+
 
 def get_save_dir(path: str) -> str:
     return os.path.join(DATA_DIR, path)
 
 
-INDEX_COLUMN = 'index'
-TARGET_COLUMN = 'target'
+class TasksList:
+    METRIC_FOLDER = 'metrics'
 
-FEATURES_IRIS_RAW = get_save_dir('features_iris.csv')
-TARGET_RAW = get_save_dir('target.csv')
 
-FEATURES_IRIS_PREPARED = get_save_dir('features_iris_prepared.csv')
-TARGET_PREPARED = get_save_dir('target_prepared.csv')
+    LOAD_RAW_FOLDER_NAME = 'load_raw'
+    LOAD_RAW_FOLDER_PATH = os.path.join(DATA_DIR, LOAD_RAW_FOLDER_NAME)
+    FEATURES_IRIS_RAW = os.path.join(LOAD_RAW_FOLDER_PATH, 'features_iris.csv')
+    TARGET_RAW = os.path.join(LOAD_RAW_FOLDER_PATH, 'target.csv')
 
-JOINED = get_save_dir('joined.csv')
 
-TRAIN_DATASET = get_save_dir('train_dataset.csv')
-TEST_DATASET = get_save_dir('test_dataset.csv')
+    PREPARE_FEATURES_FOLDER_NAME = 'prepare_features'
+    PREPARE_FEATURES_FOLDER_PATH = os.path.join(DATA_DIR, PREPARE_FEATURES_FOLDER_NAME)
+    FEATURES_IRIS_PREPARED = os.path.join(PREPARE_FEATURES_FOLDER_PATH, 'features_iris_prepared.csv')
 
-MODEL_SAVE_PATH = get_save_dir('model')
+    PREPARE_TARGETS_FOLDER_NAME = 'prepare_targets'
+    PREPARE_TARGETS_FOLDER_PATH = os.path.join(DATA_DIR, PREPARE_TARGETS_FOLDER_NAME)
+    TARGET_PREPARED = os.path.join(PREPARE_TARGETS_FOLDER_PATH, 'target_prepared.csv')
 
-TRAIN_METRICS = get_save_dir('train_metrics.json')
-TEST_METRICS = get_save_dir('test_metrics.json')
+    JOINED_FOLDER_NAME = 'joined'
+    JOINED_FOLDER_PATH = os.path.join(DATA_DIR, JOINED_FOLDER_NAME)
+    JOINED = os.path.join(JOINED_FOLDER_PATH, 'joined.csv')
+
+    PREPARE_DATASET_FOLDER_NAME = 'prepare_dataset'
+    JOINED_FOLDER_PATH = os.path.join(DATA_DIR, PREPARE_DATASET_FOLDER_NAME)
+    TRAIN_DATASET = os.path.join(JOINED_FOLDER_PATH, 'train_dataset.csv')
+    TEST_DATASET = os.path.join(JOINED_FOLDER_PATH, 'test_dataset.csv')
+
+    TRAIN_MODEL_FOLDER_NAME = 'train_model'
+    TRAIN_MODEL_FOLDER_PATH = os.path.join(DATA_DIR, TRAIN_MODEL_FOLDER_NAME)
+    MODEL_SAVE_PATH = os.path.join(TRAIN_MODEL_FOLDER_PATH, 'model.pkl')
+    TRAIN_METRICS = os.path.join(DATA_DIR, METRIC_FOLDER, 'train_metrics.json')
+
+    EVAL_MODEL_FOLDER_NAME = 'eval_model'
+    EVAL_MODEL_FOLDER_PATH = os.path.join(DATA_DIR, EVAL_MODEL_FOLDER_NAME)
+    TEST_METRICS = os.path.join(DATA_DIR, METRIC_FOLDER, 'test_metrics.json')

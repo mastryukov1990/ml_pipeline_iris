@@ -2,6 +2,10 @@ import abc
 
 import yaml
 
+from project.common import get_logger
+
+logger = get_logger(__name__)
+
 
 def read_yaml(filename: str) -> dict:
     with open(filename, 'r') as f:
@@ -9,10 +13,9 @@ def read_yaml(filename: str) -> dict:
 
 
 class ConfigFromDict:
-    SECTION: str
-
     @classmethod
     def from_dict(cls, data: dict):
+        logger.info(data)
         return cls(**data)
 
 
@@ -36,7 +39,7 @@ class ConfigFromArgs(DataFromFile, ConfigFromDict):
         args_dict = vars(args)
 
         return cls.from_dict(
-            **{
+            {
                 k: args_dict[k] if k in args_dict and args_dict[k] else v
                 for k, v in data.items()
             }

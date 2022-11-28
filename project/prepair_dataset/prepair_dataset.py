@@ -4,8 +4,8 @@ import pandas as pd
 
 from typing import Tuple
 
-from project.common import config_path_parser
-from project.constants import JOINED, TRAIN_DATASET, TEST_DATASET
+from project.common import config_path_parser, save_csv
+from project.constants import TasksList
 from project.prepair_dataset.config import PrepareDatasetConfig
 
 
@@ -16,17 +16,18 @@ def split_train_test(df: pd.DataFrame, test_ratio: float) -> Tuple[pd.DataFrame,
 
 
 def get_datasets(config: PrepareDatasetConfig):
-    joined_df = pd.read_csv(JOINED)
+    joined_df = pd.read_csv(TasksList.JOINED)
     train_df, test_df = split_train_test(joined_df, config.ratio)
 
-    train_df.to_csv(TRAIN_DATASET, index=False)
-    test_df.to_csv(TEST_DATASET, index=False)
+    save_csv(TasksList.TRAIN_DATASET, train_df)
+    save_csv(TasksList.TEST_DATASET, test_df)
+
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser = config_path_parser(parser)
-    parser.add_argument("--ratio", type=float, default=0.1)
+    parser.add_argument("--ratio", type=float)
 
     config = PrepareDatasetConfig.from_args(parser.parse_args())
     get_datasets(config=config)
