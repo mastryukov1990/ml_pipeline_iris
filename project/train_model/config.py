@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import List
 
 import attr
 import pickle
@@ -9,7 +10,7 @@ from sklearn.ensemble import RandomForestClassifier
 
 from project.config_from_file import ConfigFromArgs
 from project.constants import TasksList
-
+from project.eval_model.config import MetricsName
 
 TRAIN_MODEL = 'train_model'
 
@@ -51,3 +52,5 @@ class Model:
 class TrainModelsConfig(ConfigFromArgs):
     SECTION = TRAIN_MODEL
     model_name: ModelNames = attr.ib()
+    metrics: List[MetricsName] = attr.ib(default=[MetricsName.PRECISION])
+

@@ -19,4 +19,6 @@ eval_model:
   model_name: decision_tree
   metrics:
     - precision
+    - recall
+    - accuracy
 

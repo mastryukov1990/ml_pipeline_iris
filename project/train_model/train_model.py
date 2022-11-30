@@ -5,6 +5,7 @@ import pandas as pd
 
 from project.common import save_dict, config_path_parser, get_logger, create_parent_folder
 from project.constants import TasksList, TARGET_COLUMN
+from project.metrics import METRICS
 from project.train_model.config import TrainModelsConfig, Model, ModelNames
 
 
@@ -22,13 +23,18 @@ def train_model(config: TrainModelsConfig):
 
     y, x = train_df[TARGET_COLUMN].values.reshape(-1, 1), train_df.drop(TARGET_COLUMN, axis=1)
     model.fit(y=y, x=x)
-    scores = model.get_score(y=y, x=x)
+
+    predictions = model.predict(train_df.drop(TARGET_COLUMN, axis=1))
+    train_scores = {
+        metric: METRICS[metric](predictions, train_df[TARGET_COLUMN])
+        for metric in config.metrics
+    }
 
     create_parent_folder(TasksList.TRAIN_METRICS)
     create_parent_folder(TasksList.MODEL_SAVE_PATH)
 
 
-    log_metrics(TasksList.TRAIN_METRICS, scores)
+    log_metrics(TasksList.TRAIN_METRICS, train_scores)
     model.log_model()
 
 

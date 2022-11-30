@@ -71,3 +71,5 @@ stages:
     deps:
       - ${DATA_DIR}/${TasksList.TRAIN_MODEL_FOLDER_NAME}
       - project/eval_model/eval_model.py
+    metrics:
+      - ${DATA_DIR}/${TasksList.METRIC_FOLDER}/test_metrics.json
