@@ -6,8 +6,7 @@ import attr
 
 from project.config_from_file import ConfigFromArgs
 from project.metrics import MetricsName
-from project.train_model.config import ModelNames
-
+from project.models import ModelNames
 
 
 @attr.s

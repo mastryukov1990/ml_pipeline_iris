@@ -5,9 +5,9 @@ import pandas as pd
 
 from project.common import config_path_parser, create_parent_folder
 from project.constants import TasksList, TARGET_COLUMN
-from project.eval_model.config import EvalModelsConfig, METRICS, MetricsName
-from project.train_model.config import Model
-from project.train_model.train_model import log_metrics
+from project.eval_model.config import EvalModelsConfig
+from project.metrics import METRICS, MetricsName, log_metrics
+from project.models import Model
 
 
 def eval_model(config: EvalModelsConfig):

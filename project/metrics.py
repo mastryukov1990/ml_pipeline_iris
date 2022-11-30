@@ -1,6 +1,12 @@
 from enum import Enum
+from typing import Dict, List, Union
 
 import numpy as np
+
+from project.common import save_dict
+from project.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 def get_precision(y_pred: np.array, y_true: np.array):
@@ -30,3 +36,7 @@ METRICS = {
     MetricsName.PRECISION: get_precision,
     MetricsName.ACCURACY: get_acc,
 }
+
+def log_metrics(save_path: str, metrics: Union[Dict, List]):
+    logger.info(f'metrics - {metrics}')
+    save_dict(save_path, metrics)

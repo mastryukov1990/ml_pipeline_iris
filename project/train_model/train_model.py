@@ -5,16 +5,9 @@ import pandas as pd
 
 from project.common import save_dict, config_path_parser, get_logger, create_parent_folder
 from project.constants import TasksList, TARGET_COLUMN
-from project.metrics import METRICS
-from project.train_model.config import TrainModelsConfig, Model, ModelNames
-
-
-logger = get_logger(__name__)
-
-
-def log_metrics(save_path: str, metrics: Union[Dict, List]):
-    logger.info(f'metrics - {metrics}')
-    save_dict(save_path, metrics)
+from project.metrics import METRICS, log_metrics
+from project.models import Model, ModelNames
+from project.train_model.config import TrainModelsConfig
 
 
 def train_model(config: TrainModelsConfig):
