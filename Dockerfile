@@ -2,11 +2,13 @@ FROM python:3.9
 
 RUN pip3 install --upgrade "pip==22.3"
 
-COPY ./requirements.txt  $PROJECT_ROOT/
+WORKDIR app
 
-RUN pip3 install --no-cache-dir -r requirements.txt
+COPY ./requirements.txt  $WORKDIR/
 
-COPY . $PROJECT_ROOT
+RUN pip3 install --no-cache-dir -r $WORKDIR/requirements.txt
+
+COPY . $WORKDIR
 
 
 RUN jupyter contrib nbextension install --user && \
@@ -19,4 +21,4 @@ RUN jupyter contrib nbextension install --user && \
     jupyter nbextension enable  execute_time/ExecuteTime && \
     python3.9 -m ipykernel.kernelspec
 
-RUN PYTHONPATH="$PROJECT_ROOT:$PYTHONPATH"
+RUN PYTHONPATH="$WORKDIR:$PYTHONPATH"

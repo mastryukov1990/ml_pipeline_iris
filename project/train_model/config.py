@@ -44,7 +44,7 @@ class Model:
         self.model = pickle.load(open(TasksList.MODEL_SAVE_PATH, 'rb'))
 
     def get_score(self, x, y):
-        return self.model.score(x, y)
+        return {'acc': self.model.score(x, y)}
 
 
 @attr.s
