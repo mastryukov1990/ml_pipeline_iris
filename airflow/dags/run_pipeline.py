@@ -22,8 +22,7 @@ class Key:
 
 
 class ConfigPusher:
-    DEFAULT_CONFIG = {'command': 'python -m project.load_data.load_data --config-path params.yaml'
-                      }
+    DEFAULT_CONFIG = {'command': 'dvc repro'}
     SERVICES = []
 
     def prepare_default(self, dag_run) -> dict:

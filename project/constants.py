@@ -4,6 +4,7 @@ DATA_DIR = 'data'
 
 INDEX_COLUMN = 'index'
 TARGET_COLUMN = 'target'
+TRACKING_URI = 'localhost:6666'
 
 
 def get_save_dir(path: str) -> str:

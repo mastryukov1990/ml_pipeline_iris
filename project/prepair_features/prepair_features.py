@@ -7,7 +7,6 @@ from project.common import config_path_parser, get_logger, save_csv
 from project.constants import TasksList
 from project.prepair_features.config import PrepareFeaturesConfig, FEATURES, FeatureGroup
 
-
 logger = get_logger(__name__)
 
 
@@ -29,7 +28,7 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser = config_path_parser(parser)
-    parser.add_argument("--features-group", type=FeatureGroup, default=FeatureGroup.SEPAL_FEATURES_NAME)
+    parser.add_argument("--features-group", type=FeatureGroup)
 
     config = PrepareFeaturesConfig.from_args(parser.parse_args())
     logger.info(f'config - {config}')

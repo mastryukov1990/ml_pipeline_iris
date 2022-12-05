@@ -40,23 +40,23 @@ stages:
       size: 3739
       nfiles: 2
     - path: project/prepair_features/prepair_features.py
-      md5: a410381615cf505a7c4c72fdcf5037a0
-      size: 1200
+      md5: 14276408fbd5db945f4de1c06650cca5
+      size: 1158
     params:
       params.yaml:
         prepare_features:
-          features_group: sepal_group
+          features_group: all
     outs:
     - path: data/prepare_features
-      md5: 6d0ea74bf0556c681c43770e6000bb5b.dir
-      size: 1716
+      md5: ce85f453da600a396d62dd2d2e06227a.dir
+      size: 2936
       nfiles: 1
   merge:
     cmd: PYTHONPATH="." python project/merge/merge.py --config-path params.yaml
     deps:
     - path: data/prepare_features
-      md5: 6d0ea74bf0556c681c43770e6000bb5b.dir
-      size: 1716
+      md5: ce85f453da600a396d62dd2d2e06227a.dir
+      size: 2936
       nfiles: 1
     - path: data/prepare_targets
       md5: c56c01208ce7ab555709ebf125eb3639.dir
@@ -71,16 +71,16 @@ stages:
           how: inner
     outs:
     - path: data/joined
-      md5: bbd9ef4590b52b13bf2cf482eb3a2c54.dir
-      size: 1027
+      md5: 8c0c845c988245f0d7e166cce5e3603e.dir
+      size: 1847
       nfiles: 1
   prepair_dataset:
     cmd: PYTHONPATH="." python project/prepair_dataset/prepair_dataset.py --config-path
       params.yaml
     deps:
     - path: data/joined
-      md5: bbd9ef4590b52b13bf2cf482eb3a2c54.dir
-      size: 1027
+      md5: 8c0c845c988245f0d7e166cce5e3603e.dir
+      size: 1847
       nfiles: 1
     - path: project/prepair_dataset/prepair_dataset.py
       md5: c3f82507dd5c2aa51fd234ecd7606c04
@@ -88,47 +88,57 @@ stages:
     params:
       params.yaml:
         prepare_dataset:
-          ratio: 0.95
+          ratio: 0.9
     outs:
     - path: data/prepare_dataset
-      md5: c8d733910527dac4b26c1c658304d8c0.dir
-      size: 1054
+      md5: 24cc8185fdf43f19028604fd451bb147.dir
+      size: 1894
       nfiles: 2
   train_models:
     cmd: PYTHONPATH="." python project/train_model/train_model.py --config-path params.yaml
     deps:
     - path: data/prepare_dataset
-      md5: c8d733910527dac4b26c1c658304d8c0.dir
-      size: 1054
+      md5: 24cc8185fdf43f19028604fd451bb147.dir
+      size: 1894
       nfiles: 2
     - path: project/train_model/train_model.py
-      md5: a7b8cf182d6df7a284665191c70c7f98
-      size: 1223
+      md5: 7e8809b417af410c7c7c1c9530925b8c
+      size: 1301
     params:
       params.yaml:
         train_model:
           model_name: decision_tree
+          metrics:
+          - precision
+          - recall
+          - accuracy
     outs:
     - path: data/metrics/train_metrics.json
-      md5: e4c2e8edac362acab7123654b9e73432
-      size: 3
+      md5: 49842a903fd41652cff031cb15a8d9d4
+      size: 64
     - path: data/train_model
-      md5: 6bbdccd0d3c6ba009ceeb2fdbc7a3557.dir
-      size: 1381
+      md5: 71b6dce4a665491365696a8e4145e660.dir
+      size: 1405
       nfiles: 1
   eval_model:
     cmd: PYTHONPATH="." python project/eval_model/eval_model.py --config-path params.yaml
     deps:
     - path: data/train_model
-      md5: 6bbdccd0d3c6ba009ceeb2fdbc7a3557.dir
-      size: 1381
+      md5: 71b6dce4a665491365696a8e4145e660.dir
+      size: 1405
       nfiles: 1
     - path: project/eval_model/eval_model.py
-      md5: 7fcd597952d6c3216a0f69443eed53af
-      size: 1130
+      md5: 146be0536509f80fe97ce7fbc4044748
+      size: 1102
     params:
       params.yaml:
         eval_model:
           model_name: decision_tree
           metrics:
           - precision
+          - recall
+          - accuracy
+    outs:
+    - path: data/metrics/test_metrics.json
+      md5: 49842a903fd41652cff031cb15a8d9d4
+      size: 64

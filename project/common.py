@@ -22,6 +22,11 @@ def save_dict(filename: str, metrics: Union[Dict, List]):
         json.dump(metrics, f, indent=4)
 
 
+def load_dict(filename: str):
+    with open(filename, 'r') as f:
+        return json.load(f)
+
+
 def create_parent_folder(filename: str):
     parent_folder = Path(filename).parent
 

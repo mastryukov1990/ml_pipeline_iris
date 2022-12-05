@@ -1,4 +1,5 @@
 import abc
+from typing import Dict, List
 
 import yaml
 
@@ -13,9 +14,12 @@ def read_yaml(filename: str) -> dict:
 
 
 class ConfigFromDict:
+    as_dict: Dict
+
     @classmethod
     def from_dict(cls, data: dict):
         logger.info(data)
+        cls.as_dict = data
         return cls(**data)
 
 

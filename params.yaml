@@ -1,19 +1,26 @@
-data_dir: data
+mlflow_log:
+  experiment_name: test1
+  run_name: test_run_name
+  tracking_uri: http://rec-devbox01:90/
 
 prepare_features:
   features_group: sepal_group
 
 prepare_target:
-  target_group: target_easy
+  target_group: all
 
 joined:
   how: inner
 
 prepare_dataset:
-  ratio: 0.95
+  ratio: 0.1
 
 train_model:
   model_name: decision_tree
+  metrics:
+    - precision
+    - recall
+    - accuracy
 
 eval_model:
   model_name: decision_tree

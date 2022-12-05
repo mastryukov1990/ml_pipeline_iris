@@ -73,3 +73,11 @@ stages:
       - project/eval_model/eval_model.py
     metrics:
       - ${DATA_DIR}/${TasksList.METRIC_FOLDER}/test_metrics.json
+
+  mlflow_log:
+    cmd: PYTHONPATH="${python_path}" python project/mlflow_log/mlflow_log.py --config-path params.yaml
+    params:
+      - mlflow_log
+    deps:
+      - ${DATA_DIR}/${TasksList.METRIC_FOLDER}/test_metrics.json
+      - project/mlflow_log/mlflow_log.py
