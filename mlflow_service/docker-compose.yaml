@@ -1,0 +1,87 @@
+# This version hides the underlying postgres database on a backend network
+# different from the frontend network on which nginx interfaces mlflow.
+# And mlflow is hidden behind nginx, allowing user auth to be implemented.
+#
+# Have the following environment vars set in shell before running docker-compose
+# (suggested values here but can use whatever desired):
+# export DB_NAME=mlflowdb
+# export DB_USER=postgres
+# export DB_PW=<somepassword>
+# export DB_PORT=5432
+# export MLFLOW_PORT=5000
+#
+# AWS S3 bucket can be used instead of local drive for artifacts store via
+# commented-out environment lines below.
+version: '3.3'
+
+services:
+    db:
+        restart: always
+        image: postgres:13
+        container_name: mlflow_db
+        expose:
+            - 5432
+        networks:
+            - backend
+        environment:
+            - MUID=$UID
+            - MGID=$GID
+            - POSTGRES_DB=mlflowdb
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=somepassword
+        volumes:
+            - gg:/var/lib/postgresql/gg
+
+    web:
+        restart: always
+        build: ./mlflow
+        image: mlflow_server
+        container_name: mlflow_server
+        expose:
+            - 5000
+        networks:
+            - frontend
+            - backend
+        environment:
+            - BACKEND=postgresql://postgres:somepassword@db:5432/mlflowdb
+            - ARTIFACTS=/mlruns
+          # For artifact store in AWS S3 (note boto was installed in container):
+          #  - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+          #  - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+          #  - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+          #  - ARTIFACTS="s3://mlflow_bucket/mlflow/"
+        volumes:
+            - mlrun_data:/mlruns
+
+        command:
+            - sh    # (sh allows for var substitution of BACKEND and ARTIFACTS)
+            - -c
+            - mlflow server 
+                --port 5000
+                --host 0.0.0.0 
+                --backend-store-uri $${BACKEND} 
+                --default-artifact-root $${ARTIFACTS}
+        depends_on:
+            - db
+
+    nginx:
+        restart: always
+        build: ./nginx
+        image: mlflow_nginx
+        container_name: mlflow_nginx
+        ports:
+            - "90:90"
+        networks:
+            - frontend
+        depends_on:
+            - web
+
+networks:
+    frontend:
+        driver: bridge
+    backend:
+        driver: bridge
+
+volumes:
+    gg:
+    mlrun_data:

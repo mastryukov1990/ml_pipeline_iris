@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="01c88eaa-a0d8-4ca5-8e07-edbdd80a9951" name="rec-devbox01" url="http://rec-devbox01">
+        <fileTransfer rootFolder="/home/admastryukov" accessType="SFTP" host="rec-devbox01" port="22" sshConfigId="199b0ee1-7a2f-4d87-9a15-8f6f81095a9b" sshConfig="admastryukov@rec-devbox01:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

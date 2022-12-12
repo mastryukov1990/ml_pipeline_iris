@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+    aaa_ds_course:
+        image: tolkkk/irisr_simpe
+        ports:
+            - "8088:8088"
+        volumes:
+            - ./:/app
+        command: /bin/bash -c "cd / && jupyter notebook --ip=0.0.0.0 --no-browser  --allow-root  --port=8088  --NotebookApp.token=crmteam01!"
+        restart: unless-stopped
