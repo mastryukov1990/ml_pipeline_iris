@@ -52,6 +52,7 @@ def get_data_dag(dag_id: str = 'test'):
     with models.DAG(
             dag_id=dag_id,
             start_date=datetime.datetime(2022, 4, 1),
+            schedule='@once'
     ) as dag:
         config_operator = PythonOperator(
             task_id='config',

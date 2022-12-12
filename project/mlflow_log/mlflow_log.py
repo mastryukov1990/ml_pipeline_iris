@@ -1,5 +1,4 @@
 import argparse
-from typing import Union, Dict, List
 
 import mlflow
 
@@ -8,7 +7,6 @@ from project.config_from_file import read_yaml
 from project.constants import TasksList
 from project.mlflow_log.config import MlflowLogConfig
 from project.mlflow_tools import mlflow_set_experiment
-from project.train_model.config import TrainModelsConfig
 
 
 def mlflow_log(config: MlflowLogConfig):

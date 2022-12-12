@@ -13,4 +13,3 @@ class MlflowLogConfig(ConfigFromArgs):
     experiment_name: str = attr.ib()
     run_name: str = attr.ib()
     tracking_uri: str = attr.ib()
-
