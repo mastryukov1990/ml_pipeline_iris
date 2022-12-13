@@ -2,10 +2,8 @@ import os
 
 from airflow import models
 from airflow.operators.python import PythonOperator
-from airflow.operators.bash import BashOperator
 from airflow.providers.docker.operators.docker import DockerOperator
 import datetime
-from docker.types import Mount
 
 DAG_ID = 'test'
 
@@ -22,7 +20,7 @@ class Key:
 
 
 class ConfigPusher:
-    DEFAULT_CONFIG = {'command': 'dvc repro'}
+    DEFAULT_CONFIG = {'command': 'dvc repro', 'MLFLOW_TRACKING_URI': 'http://51.250.108.121:90/'}
     SERVICES = []
 
     def prepare_default(self, dag_run) -> dict:
@@ -65,7 +63,13 @@ def get_data_dag(dag_id: str = 'test'):
             image='tolkkk/irisr_simpe',
             docker_url="unix://var/run/docker.sock",
             network_mode="bridge",
-            command=get_config_value('config', 'command'))
+            command=get_config_value('config', 'command'),
+            environment={
+                'MLFLOW_TRACKING_URI': get_config_value('config','MLFLOW_TRACKING_URI'),
+            }
+
+        ),
+
 
         config_operator >> load_data_operator
 
