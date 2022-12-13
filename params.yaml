@@ -1,7 +1,6 @@
 mlflow_log:
   experiment_name: test1
   run_name: test_run_name
-  tracking_uri: http://rec-devbox01:90/
 
 prepare_features:
   features_group: sepal_group
