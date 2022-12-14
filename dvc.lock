@@ -25,11 +25,11 @@ stages:
     params:
       params.yaml:
         prepare_target:
-          target_group: target_easy
+          target_group: all
     outs:
     - path: data/prepare_targets
-      md5: c56c01208ce7ab555709ebf125eb3639.dir
-      size: 503
+      md5: 37f78105e8f39f6eff7650185e52ce4d.dir
+      size: 803
       nfiles: 1
   prepair_features:
     cmd: PYTHONPATH="." python project/prepair_features/prepair_features.py --config-path
@@ -40,27 +40,27 @@ stages:
       size: 3739
       nfiles: 2
     - path: project/prepair_features/prepair_features.py
-      md5: 14276408fbd5db945f4de1c06650cca5
-      size: 1158
+      md5: e27541db5771953df00bcc5e7d9ea7ac
+      size: 1157
     params:
       params.yaml:
         prepare_features:
-          features_group: all
+          features_group: sepal_group
     outs:
     - path: data/prepare_features
-      md5: ce85f453da600a396d62dd2d2e06227a.dir
-      size: 2936
+      md5: 6d0ea74bf0556c681c43770e6000bb5b.dir
+      size: 1716
       nfiles: 1
   merge:
     cmd: PYTHONPATH="." python project/merge/merge.py --config-path params.yaml
     deps:
     - path: data/prepare_features
-      md5: ce85f453da600a396d62dd2d2e06227a.dir
-      size: 2936
+      md5: 6d0ea74bf0556c681c43770e6000bb5b.dir
+      size: 1716
       nfiles: 1
     - path: data/prepare_targets
-      md5: c56c01208ce7ab555709ebf125eb3639.dir
-      size: 503
+      md5: 37f78105e8f39f6eff7650185e52ce4d.dir
+      size: 803
       nfiles: 1
     - path: project/merge/merge.py
       md5: 1b8765552b8962ad7509af895dd0bf54
@@ -71,16 +71,16 @@ stages:
           how: inner
     outs:
     - path: data/joined
-      md5: 8c0c845c988245f0d7e166cce5e3603e.dir
-      size: 1847
+      md5: d41b65d4e2c312a326624110b4fdeb00.dir
+      size: 1527
       nfiles: 1
   prepair_dataset:
     cmd: PYTHONPATH="." python project/prepair_dataset/prepair_dataset.py --config-path
       params.yaml
     deps:
     - path: data/joined
-      md5: 8c0c845c988245f0d7e166cce5e3603e.dir
-      size: 1847
+      md5: d41b65d4e2c312a326624110b4fdeb00.dir
+      size: 1527
       nfiles: 1
     - path: project/prepair_dataset/prepair_dataset.py
       md5: c3f82507dd5c2aa51fd234ecd7606c04
@@ -88,22 +88,22 @@ stages:
     params:
       params.yaml:
         prepare_dataset:
-          ratio: 0.9
+          ratio: 0.1
     outs:
     - path: data/prepare_dataset
-      md5: 24cc8185fdf43f19028604fd451bb147.dir
-      size: 1894
+      md5: c9ead1b881e7c16a38f1f6df3a33bf67.dir
+      size: 1554
       nfiles: 2
   train_models:
     cmd: PYTHONPATH="." python project/train_model/train_model.py --config-path params.yaml
     deps:
     - path: data/prepare_dataset
-      md5: 24cc8185fdf43f19028604fd451bb147.dir
-      size: 1894
+      md5: c9ead1b881e7c16a38f1f6df3a33bf67.dir
+      size: 1554
       nfiles: 2
     - path: project/train_model/train_model.py
-      md5: 7e8809b417af410c7c7c1c9530925b8c
-      size: 1301
+      md5: 509bd70f854a5bcc6bbde84f270ad172
+      size: 1242
     params:
       params.yaml:
         train_model:
@@ -114,18 +114,18 @@ stages:
           - accuracy
     outs:
     - path: data/metrics/train_metrics.json
-      md5: 49842a903fd41652cff031cb15a8d9d4
-      size: 64
+      md5: ccace45fe29a1231b3ca9c6bb61b903c
+      size: 109
     - path: data/train_model
-      md5: 71b6dce4a665491365696a8e4145e660.dir
-      size: 1405
+      md5: ccc178ce6a5f0b0d800207cd23a61950.dir
+      size: 7979
       nfiles: 1
   eval_model:
     cmd: PYTHONPATH="." python project/eval_model/eval_model.py --config-path params.yaml
     deps:
     - path: data/train_model
-      md5: 71b6dce4a665491365696a8e4145e660.dir
-      size: 1405
+      md5: ccc178ce6a5f0b0d800207cd23a61950.dir
+      size: 7979
       nfiles: 1
     - path: project/eval_model/eval_model.py
       md5: 146be0536509f80fe97ce7fbc4044748
@@ -140,5 +140,19 @@ stages:
           - accuracy
     outs:
     - path: data/metrics/test_metrics.json
-      md5: 49842a903fd41652cff031cb15a8d9d4
-      size: 64
+      md5: 0ecb756853857d1062b5721e810fd719
+      size: 65
+  mlflow_log:
+    cmd: PYTHONPATH="." python project/mlflow_log/mlflow_log.py --config-path params.yaml
+    deps:
+    - path: data/metrics/test_metrics.json
+      md5: 0ecb756853857d1062b5721e810fd719
+      size: 65
+    - path: project/mlflow_log/mlflow_log.py
+      md5: 9dab9fd4aac2ddaebabeb8389e0f8b37
+      size: 1116
+    params:
+      params.yaml:
+        mlflow_log:
+          experiment_name: test1
+          run_name: test_run_name

@@ -1,0 +1,5 @@
+[core]
+    remote = yandex_s3
+['remote "yandex_s3"']
+    url = s3://aaa-mlsd-pipelines/dvc
+    endpointurl = https://storage.yandexcloud.net/
