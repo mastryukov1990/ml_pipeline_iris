@@ -31,17 +31,13 @@ class ConfigPusher:
 
     def __call__(self, **kwargs):
         task_instance = kwargs[Key.TASK_INSTANCE_KEY]
-        dag_run = kwargs[Key.DAG_RUN]
         dag_config = kwargs.get(Key.PARAMS, {})
 
         default_config = self.DEFAULT_CONFIG.copy()
-        default_config.update(self.prepare_default(dag_run))
         config = {
             key: dag_config[key] if key in dag_config else default_value
             for key, default_value in default_config.items()
         }
-        config.update(self.finalize_config(config))
-
         for key, value in sorted(config.items()):
             task_instance.xcom_push(key=key, value=value)
 
