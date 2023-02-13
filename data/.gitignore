@@ -5,3 +5,6 @@
 /joined
 /prepare_dataset
 /train_model
+/train
+/eval
+/metrics.json
