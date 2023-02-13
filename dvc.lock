@@ -156,3 +156,43 @@ stages:
         mlflow_log:
           experiment_name: test1
           run_name: test_run_name
+  train:
+    cmd: PYTHONPATH="." python lib/train.py --config-path params.yaml
+    deps:
+    - path: lib/train.py
+      md5: 789065d804a48d0d35a5a17bf64443bf
+      size: 1796
+    params:
+      params.yaml:
+        train:
+          test_size: 0.94
+    outs:
+    - path: data/train
+      md5: f0f7fce39a1a85091831e86b8fb99085.dir
+      size: 16079
+      nfiles: 4
+  eval:
+    cmd: PYTHONPATH="." python lib/eval.py --config-path params.yaml
+    deps:
+    - path: data/train
+      md5: f0f7fce39a1a85091831e86b8fb99085.dir
+      size: 16079
+      nfiles: 4
+    - path: lib/eval.py
+      md5: 7a9515a4d6fd2fa34010c43db0303836
+      size: 1094
+    params:
+      params.yaml:
+        eval:
+          metrics:
+          - precision
+          - recall
+          - accuracy
+    outs:
+    - path: data/eval
+      md5: c11679efc68a3cb5801a98d0c2bf61a7.dir
+      size: 10755
+      nfiles: 1
+    - path: data/metrics.json
+      md5: 398eec9e47d3265526c01d65b20ef151
+      size: 95
