@@ -1,4 +1,3 @@
-import json
 import os
 import pickle
 import random
@@ -13,20 +12,12 @@ from sklearn.metrics import precision_score
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 
+from lib.common import save_dict
+
 RANDOM_SEED = 1
 
 random.seed(RANDOM_SEED)
 np.random.seed(RANDOM_SEED)
-
-
-def save_dict(data: dict, filename: str):
-    with open(filename, 'w') as f:
-        json.dump(data, f)
-
-
-def load_dict(filename: str):
-    with open(filename, 'r') as f:
-        return json.load(f)
 
 
 def train_model(x, y):
@@ -47,7 +38,7 @@ def train():
     x = iris['data'].tolist()
     y = iris['target'].tolist()
 
-    train_x, test_x, train_y, test_y = train_test_split(x, y, test_size=config['test_size'])
+    train_x, test_x, train_y, test_y = train_test_split(x, y, test_size=config['test_size'], random_state=RANDOM_SEED)
 
     model = train_model(train_x, train_y)
 
@@ -72,11 +63,6 @@ def train():
 
     with open('data/train/model.pkl', 'wb') as f:
         pickle.dump(model, f)
-
-    params = {}
-    for i in data.values():
-        params.update(i)
-
 
 
 if __name__ == '__main__':

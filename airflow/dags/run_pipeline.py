@@ -20,7 +20,7 @@ class Key:
 
 
 class ConfigPusher:
-    DEFAULT_CONFIG = {'command': 'dvc repro', 'MLFLOW_TRACKING_URI': 'http://51.250.108.121:90/'}
+    DEFAULT_CONFIG = {'command': 'dvc repro', 'MLFLOW_TRACKING_URI': 'http://51.250.18.36:8080/', 'image': 'tolkkk/irisr_simpe'}
     SERVICES = []
 
     def prepare_default(self, dag_run) -> dict:
@@ -56,7 +56,7 @@ def get_data_dag(dag_id: str = 'test'):
 
         load_data_operator = DockerOperator(
             task_id='load_data',
-            image='tolkkk/irisr_simpe',
+            image=get_config_value('config','image'),
             docker_url="unix://var/run/docker.sock",
             network_mode="bridge",
             command=get_config_value('config', 'command'),
