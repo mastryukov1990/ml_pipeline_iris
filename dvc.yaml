@@ -1,6 +1,6 @@
 stages:
   train:
-    cmd: PYTHONPATH="." python lib/train.py --config-path params.yaml
+    cmd: PYTHONPATH="." python lib/train.py
     params:
       - train
     deps:
@@ -9,7 +9,7 @@ stages:
       - data/train
 
   eval:
-    cmd: PYTHONPATH="." python lib/eval.py --config-path params.yaml
+    cmd: PYTHONPATH="." python lib/eval.py
     params:
       - eval
     deps:
