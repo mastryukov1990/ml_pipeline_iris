@@ -20,7 +20,7 @@ class Key:
 
 
 class ConfigPusher:
-    DEFAULT_CONFIG = {'command': 'dvc repro', 'MLFLOW_TRACKING_URI': 'http://51.250.18.36:8080/', 'image': 'tolkkk/irisr_simpe'}
+    DEFAULT_CONFIG = {'command': 'dvc repro', 'MLFLOW_TRACKING_URI': 'http://51.250.18.36:90/', 'image': 'tolkkk/irisr_simpe'}
     SERVICES = []
 
     def prepare_default(self, dag_run) -> dict:
