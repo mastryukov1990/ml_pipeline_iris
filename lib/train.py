@@ -21,7 +21,7 @@ np.random.seed(RANDOM_SEED)
 
 
 def train_model(x, y):
-    model = DecisionTreeClassifier()
+    model = DecisionTreeClassifier(random_state=RANDOM_SEED)
     model.fit(x, y)
     return model
 
@@ -31,10 +31,9 @@ def train():
         data = yaml.safe_load(f)
 
     config = data['train']
-
-    iris = datasets.load_iris()
     task_dir = 'data/train'
 
+    iris = datasets.load_iris()
     x = iris['data'].tolist()
     y = iris['target'].tolist()
 

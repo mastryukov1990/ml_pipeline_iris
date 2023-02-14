@@ -8,7 +8,7 @@ import seaborn as sns
 import yaml
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 
-from lib.train import load_dict, save_dict
+from lib.common import load_dict, save_dict
 
 METRICS = {
     'recall': partial(recall_score, average='micro'),
@@ -26,6 +26,7 @@ def eval():
         model = pickle.load(f)
 
     data = load_dict('data/train/data.json')
+
     preds = model.predict(data['test_x'])
 
     if not os.path.exists('data/eval'):

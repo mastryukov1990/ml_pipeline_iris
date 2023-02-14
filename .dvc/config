@@ -1,5 +1,7 @@
 [core]
-    remote = yandex_s3
+    remote = myremote
 ['remote "yandex_s3"']
     url = s3://aaa-mlsd-pipelines/dvc
     endpointurl = https://storage.yandexcloud.net/
+['remote "myremote"']
+    url = /tmp/dvcstore
