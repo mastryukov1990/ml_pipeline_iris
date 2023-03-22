@@ -160,8 +160,8 @@ stages:
     cmd: PYTHONPATH="." python lib/train.py
     deps:
     - path: lib/train.py
-      md5: 92a7ac5bc4a08bfc3a33c9a1b95310a4
-      size: 1662
+      md5: 95549e46659f0bfa08dfb6095eb9f720
+      size: 1768
     params:
       params.yaml:
         train:
@@ -179,8 +179,8 @@ stages:
       size: 16833
       nfiles: 4
     - path: lib/eval.py
-      md5: 3809b9e7b3a237466d518ace7340d090
-      size: 1123
+      md5: ca5d558fdcd1faf3872a991c779a78d0
+      size: 1270
     params:
       params.yaml:
         eval:

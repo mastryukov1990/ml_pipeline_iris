@@ -64,6 +64,8 @@ def train():
         pickle.dump(model, f)
     print(f'train  metrics - {metrics}')
 
+    mlflow_log(experiment_name='high_train_test_size', params=config, metrics=metrics, run_name='train')
+
 
 if __name__ == '__main__':
     train()

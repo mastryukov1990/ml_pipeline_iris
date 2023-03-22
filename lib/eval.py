@@ -42,6 +42,8 @@ def eval():
     plt.savefig('data/eval/heatmap.png')
     print(f'eval  metrics - {metrics}')
 
+    mlflow_log(experiment_name='high_train_test_size', params={'test_size':config_data['train']['test_size']}, metrics=metrics, run_name='test')
+
 
 if __name__ == '__main__':
     eval()
