@@ -40,7 +40,7 @@ def eval():
 
     sns.heatmap(pd.DataFrame(data['test_x']).corr())
     plt.savefig('data/eval/heatmap.png')
-    mlflow_log(experiment_name='change_test_size', metrics=metrics, run_name='test', params={'test_size': config_data['train']['test_size']})
+    print(f'eval  metrics - {metrics}')
 
 
 if __name__ == '__main__':

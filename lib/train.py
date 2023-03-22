@@ -62,7 +62,7 @@ def train():
 
     with open('data/train/model.pkl', 'wb') as f:
         pickle.dump(model, f)
-    mlflow_log(experiment_name= 'change_test_size',metrics=metrics, run_name='train', params={'test_size': config['test_size']})
+    print(f'train  metrics - {metrics}')
 
 
 if __name__ == '__main__':
