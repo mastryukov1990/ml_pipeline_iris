@@ -9,19 +9,19 @@ import yaml
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 
 from lib.common import load_dict, save_dict
+from lib.mlflow_log import mlflow_log
 
 METRICS = {
-    'recall': partial(recall_score, average='micro'),
-    'precision': partial(precision_score, average='micro'),
+    'precision': partial(precision_score, average='weighted'),
     'accuracy': accuracy_score,
 }
 
 
 def eval():
     with open('params.yaml', 'r') as f:
-        data = yaml.safe_load(f)
+        config_data = yaml.safe_load(f)
 
-    config = data['eval']
+    config = config_data['eval']
     with open('data/train/model.pkl', 'rb') as f:
         model = pickle.load(f)
 
@@ -40,6 +40,7 @@ def eval():
 
     sns.heatmap(pd.DataFrame(data['test_x']).corr())
     plt.savefig('data/eval/heatmap.png')
+    mlflow_log(experiment_name='change_test_size', metrics=metrics, run_name='test', params={'test_size': config_data['train']['test_size']})
 
 
 if __name__ == '__main__':

@@ -13,6 +13,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 
 from lib.common import save_dict
+from lib.mlflow_log import mlflow_log
 
 RANDOM_SEED = 1
 
@@ -41,8 +42,7 @@ def train():
 
     model = train_model(train_x, train_y)
 
-    metrics = {}
-    metrics['precision'] = precision_score(train_y, model.predict(train_x), average='micro')
+    metrics = {'precision': precision_score(train_y, model.predict(train_x), average='micro')}
 
     save_data = {
         'train_x': train_x,
@@ -62,6 +62,7 @@ def train():
 
     with open('data/train/model.pkl', 'wb') as f:
         pickle.dump(model, f)
+    mlflow_log(experiment_name= 'change_test_size',metrics=metrics, run_name='train', params={'test_size': config['test_size']})
 
 
 if __name__ == '__main__':
