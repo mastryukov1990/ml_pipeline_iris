@@ -52,7 +52,7 @@ def train():
     }
 
     if not os.path.exists(task_dir):
-        os.mkdir(task_dir)
+        os.makedirs(task_dir)
 
     save_dict(save_data, os.path.join(task_dir, 'data.json'))
     save_dict(metrics, os.path.join(task_dir, 'metrics.json'))
