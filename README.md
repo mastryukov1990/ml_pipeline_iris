@@ -11,8 +11,10 @@
 
 ## Jupyter
 Ссылка на ноутбук
+
 ## Python 
 [Тренировка](https://github.com/mastryukov1990/ml_pipeline_iris/blob/main/lib/train.py), [валидация](https://github.com/mastryukov1990/ml_pipeline_iris/blob/main/lib/eval.py), [параметры запуска](https://github.com/mastryukov1990/ml_pipeline_iris/blob/main/params.yaml)
+
 ## DVC
 [Настройка пайплайна](https://github.com/mastryukov1990/ml_pipeline_iris/blob/main/dvc.yaml), [параметры запуска](https://github.com/mastryukov1990/ml_pipeline_iris/blob/main/params.yaml), [логи](https://github.com/mastryukov1990/ml_pipeline_iris/blob/main/dvc.lock)
 
