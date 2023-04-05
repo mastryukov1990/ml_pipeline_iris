@@ -12,4 +12,4 @@
 ## Jupyter
 Ссылка на ноутбук
 ## Python 
-(Тренировка)[https://github.com/mastryukov1990/ml_pipeline_iris/blob/main/lib/train.py] и (валидация)[https://github.com/mastryukov1990/ml_pipeline_iris/blob/main/lib/eval.py]
+[Тренировка](https://github.com/mastryukov1990/ml_pipeline_iris/blob/main/lib/train.py) и [валидация](https://github.com/mastryukov1990/ml_pipeline_iris/blob/main/lib/eval.py)
