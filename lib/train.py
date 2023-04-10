@@ -77,6 +77,8 @@ def train():
     for i in data.values():
         params.update(i)
 
+    print(f'params = {params}')
+    print(f'metrics = {metrics}')
 
 
 if __name__ == '__main__':

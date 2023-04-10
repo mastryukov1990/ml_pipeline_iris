@@ -39,6 +39,7 @@ def eval():
 
     sns.heatmap(pd.DataFrame(data['test_x']).corr())
     plt.savefig('data/eval/heatmap.png')
+    print(f'metrics = {metrics}')
 
 
 if __name__ == '__main__':
