@@ -9,6 +9,7 @@ import yaml
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 
 from lib.train import load_dict, save_dict
+import mlflow
 
 METRICS = {
     'recall': partial(recall_score, average='micro'),
@@ -39,7 +40,10 @@ def eval():
 
     sns.heatmap(pd.DataFrame(data['test_x']).corr())
     plt.savefig('data/eval/heatmap.png')
-    print(f'metrics = {metrics}')
+
+    params = {'eval': 'run_type'}
+    mlflow.log_params(params)
+    mlflow.log_metrics(metrics)
 
 
 if __name__ == '__main__':

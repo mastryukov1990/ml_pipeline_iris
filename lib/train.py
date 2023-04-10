@@ -12,6 +12,10 @@ from sklearn import datasets
 from sklearn.metrics import precision_score
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
+import mlflow
+
+mlflow.set_tracking_uri('http://51.250.18.36:90')
+mlflow.set_experiment('mipt_test_train_size')
 
 RANDOM_SEED = 1
 
@@ -77,8 +81,9 @@ def train():
     for i in data.values():
         params.update(i)
 
-    print(f'params = {params}')
-    print(f'metrics = {metrics}')
+    params['run_type'] = 'train'
+    mlflow.log_params(params)
+    mlflow.log_metrics(metrics)
 
 
 if __name__ == '__main__':
