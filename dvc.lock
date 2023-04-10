@@ -165,18 +165,18 @@ stages:
     params:
       params.yaml:
         train:
-          test_size: 0.9
+          test_size: 0.8
     outs:
     - path: data/train
-      md5: 09c7e2106ea2b1723e8aaeb9c12ffada.dir
-      size: 16053
+      md5: 7debb31142eb549425395713568bf29c.dir
+      size: 16023
       nfiles: 4
   eval:
     cmd: PYTHONPATH="." python lib/eval.py --config-path params.yaml
     deps:
     - path: data/train
-      md5: 09c7e2106ea2b1723e8aaeb9c12ffada.dir
-      size: 16053
+      md5: 7debb31142eb549425395713568bf29c.dir
+      size: 16023
       nfiles: 4
     - path: lib/eval.py
       md5: 2730124a7253ef647252d10ed5f50d22
@@ -190,9 +190,9 @@ stages:
           - accuracy
     outs:
     - path: data/eval
-      md5: 1c6160cb43e067815bf2c14fc137ed92.dir
-      size: 10791
+      md5: 1c11f8ad22d90670925981e329654a54.dir
+      size: 10826
       nfiles: 1
     - path: data/metrics.json
-      md5: f2a2f0f5428edebc3c5c6e09e4328f10
+      md5: c6e99ceda6768693f59e8cc319abbfdb
       size: 95
