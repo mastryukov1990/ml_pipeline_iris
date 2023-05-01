@@ -15,7 +15,7 @@ from sklearn.tree import DecisionTreeClassifier
 import mlflow
 
 mlflow.set_tracking_uri('http://51.250.18.36:90')
-mlflow.set_experiment('mipt_test_train_size')
+mlflow.set_experiment('aaa_experiment')
 
 RANDOM_SEED = 1
 
@@ -68,6 +68,7 @@ def train():
     if not os.path.exists(task_dir):
         os.mkdir(task_dir)
 
+
     save_dict(save_data, os.path.join(task_dir, 'data.json'))
     save_dict(metrics, os.path.join(task_dir, 'metrics.json'))
 
@@ -82,6 +83,13 @@ def train():
         params.update(i)
 
     params['run_type'] = 'train'
+
+
+    print(f'train metrics - {metrics}')
+    print(f'train params - {params}')
+
+
+
     mlflow.log_params(params)
     mlflow.log_metrics(metrics)
 

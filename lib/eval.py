@@ -43,6 +43,11 @@ def eval():
 
     params = {'run_type': 'eval'}
     params.update(config_data['train'])
+
+    print(f'eval params - {params}')
+    print(f'eval metrics - {metrics}')
+
+
     mlflow.log_params(params)
     mlflow.log_metrics(metrics)
 
