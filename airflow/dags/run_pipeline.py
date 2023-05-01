@@ -1,8 +1,6 @@
-import os
-
 from airflow import models
-from airflow.operators.python import PythonOperator
-from airflow.providers.docker.operators.docker import DockerOperator
+from airflow import PythonOperator
+from airflow import DockerOperator
 import datetime
 
 DAG_ID = 'test'

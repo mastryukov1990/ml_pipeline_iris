@@ -1,4 +1,4 @@
-from airflow.dags.run_pipeline import get_data_dag
+from run_pipeline import  get_data_dag
 import pandas as pd
 
 
