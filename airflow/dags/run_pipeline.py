@@ -21,7 +21,6 @@ class Key:
 
 class ConfigPusher:
     DEFAULT_CONFIG = {'command': 'dvc repro', 'MLFLOW_TRACKING_URI': 'http://51.250.108.121:90/'}
-    SERVICES = []
 
     def prepare_default(self, dag_run) -> dict:
         return {}
@@ -42,12 +41,12 @@ class ConfigPusher:
             task_instance.xcom_push(key=key, value=value)
 
 
-def get_data_dag(dag_id: str = 'test'):
+def get_data_dag(dag_id: str = 'test', image='tolkkk/irisr_simpe'):
     with models.DAG(
             dag_id=dag_id,
             start_date=datetime.datetime(2022, 4, 1),
             schedule='@once'
-    ) as dag:
+    ):
         config_operator = PythonOperator(
             task_id='config',
             python_callable=ConfigPusher(),
@@ -55,8 +54,8 @@ def get_data_dag(dag_id: str = 'test'):
         )
 
         load_data_operator = DockerOperator(
-            task_id='load_data',
-            image='tolkkk/irisr_simpe',
+            task_id='run_pipeline',
+            image=image,
             docker_url="unix://var/run/docker.sock",
             network_mode="bridge",
             command=get_config_value('config', 'command'),
