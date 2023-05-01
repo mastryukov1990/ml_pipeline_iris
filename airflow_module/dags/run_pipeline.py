@@ -1,3 +1,4 @@
+import pandas as pd
 from airflow import models
 from airflow import PythonOperator
 from airflow import DockerOperator
@@ -58,13 +59,27 @@ def get_data_dag(dag_id: str = 'test', image='tolkkk/irisr_simpe'):
             network_mode="bridge",
             command=get_config_value('config', 'command'),
             environment={
-                'MLFLOW_TRACKING_URI': get_config_value('config','MLFLOW_TRACKING_URI'),
+                'MLFLOW_TRACKING_URI': get_config_value('config', 'MLFLOW_TRACKING_URI'),
             }
 
         ),
 
-
         config_operator >> load_data_operator
 
 
+def get_custom_dags_df():
+    SHEET_ID = '17T1BDxLedpHHo7q4c7I7EPfnx0TXWc0T-Q6UWNCCZD8'
+    SHEET_NAME = 'airflow'
+
+    url = f'https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet={SHEET_NAME}'
+    return pd.read_csv(url)
+
+
+def create_custom_pipelines():
+    df = get_custom_dags_df()
+    for row in df.iterrows():
+        globals()[row['dag_id']] = get_data_dag(row['dag_id'], row['container'])
+
+
 globals()[DAG_ID] = get_data_dag(DAG_ID)
+create_custom_pipelines()
