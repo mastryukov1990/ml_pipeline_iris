@@ -20,9 +20,9 @@ METRICS = {
 
 def eval():
     with open('params.yaml', 'r') as f:
-        data = yaml.safe_load(f)
+        config_data = yaml.safe_load(f)
 
-    config = data['eval']
+    config = config_data['eval']
     with open('data/train/model.pkl', 'rb') as f:
         model = pickle.load(f)
 
@@ -41,7 +41,8 @@ def eval():
     sns.heatmap(pd.DataFrame(data['test_x']).corr())
     plt.savefig('data/eval/heatmap.png')
 
-    params = {'eval': 'run_type'}
+    params = {'run_type': 'eval'}
+    params.update(config_data['train'])
     mlflow.log_params(params)
     mlflow.log_metrics(metrics)
 
