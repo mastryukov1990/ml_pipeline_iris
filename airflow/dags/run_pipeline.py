@@ -77,7 +77,7 @@ def get_custom_dags_df():
 
 def create_custom_pipelines():
     df = get_custom_dags_df()
-    for row in df.iterrows():
+    for i, row in df.iterrows():
         globals()[row['dag_id']] = get_data_dag(row['dag_id'], row['container'])
 
 
