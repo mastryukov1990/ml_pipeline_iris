@@ -49,7 +49,6 @@ services:
 #            - ARTIFACTS=/mlruns
           # For artifact store in AWS S3 (note boto was installed in container):
             - AWS_DEFAULT_REGION=us-west-2
-            - _MLFLOW_SERVER_FILE_STORE
             - _MLFLOW_SERVER_ARTIFACT_DESTINATION=s3://aaa-mlsd-pipelines/mlflow/
             - _MLFLOW_SERVER_ARTIFACT_ROOT=mlflow-artifacts:/mlartifacts
             - _MLFLOW_SERVER_SERVE_ARTIFACTS=true
