@@ -60,7 +60,7 @@ services:
                 --backend-store-uri $${BACKEND} 
                 --artifacts-destination $${_MLFLOW_SERVER_ARTIFACT_DESTINATION}
                 --default-artifact-root $${MLFLOW_S3_ENDPOINT_URL}
-                --host remote_host
+                --host 0.0.0.0
         depends_on:
             - db
 
