@@ -50,7 +50,6 @@ services:
           # For artifact store in AWS S3 (note boto was installed in container):
         volumes:
             - mlrun_data:/mlruns
-
         command:
             - sh    # (sh allows for var substitution of BACKEND and ARTIFACTS)
             - -c
@@ -60,7 +59,7 @@ services:
                 --backend-store-uri $${BACKEND} 
                 --artifacts-destination $${_MLFLOW_SERVER_ARTIFACT_DESTINATION}
                 --default-artifact-root $${MLFLOW_S3_ENDPOINT_URL}
-                --host 0.0.0.0
+                --serve-artifacts
         depends_on:
             - db
 
