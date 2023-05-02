@@ -64,7 +64,7 @@ services:
                 --port 5000
                 --host 0.0.0.0 
                 --backend-store-uri $${BACKEND} 
-                --default-artifact-root $${ARTIFACTS}
+                --default-artifact-root $${MLFLOW_S3_ENDPOINT_URL}
         depends_on:
             - db
 
