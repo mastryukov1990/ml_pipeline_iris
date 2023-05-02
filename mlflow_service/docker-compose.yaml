@@ -50,8 +50,12 @@ services:
           # For artifact store in AWS S3 (note boto was installed in container):
             - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
             - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-            - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
-            - ARTIFACTS="s3://aaa-mlsd-pipelines/mlflow/"
+            - AWS_DEFAULT_REGION=us-west-2
+            - _MLFLOW_SERVER_FILE_STORE
+            - _MLFLOW_SERVER_ARTIFACT_DESTINATION=s3://aaa-mlsd-pipelines/mlflow/
+            - _MLFLOW_SERVER_ARTIFACT_ROOT=mlflow-artifacts:/mlartifacts
+            - _MLFLOW_SERVER_SERVE_ARTIFACTS=true
+            - MLFLOW_S3_ENDPOINT_URL=https://storage.yandexcloud.net
         volumes:
             - mlrun_data:/mlruns
 
