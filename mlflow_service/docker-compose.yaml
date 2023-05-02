@@ -58,7 +58,7 @@ services:
                 --host 0.0.0.0 
                 --backend-store-uri $${BACKEND} 
                 --artifacts-destination $${_MLFLOW_SERVER_ARTIFACT_DESTINATION}
-                --default-artifact-root $${MLFLOW_S3_ENDPOINT_URL}
+                --default-artifact-root $${_MLFLOW_SERVER_ARTIFACT_DESTINATION}
                 --serve-artifacts
         depends_on:
             - db
