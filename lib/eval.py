@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 import yaml
+import mlflow
 
 from lib.train import load_dict, save_dict, METRICS
-
 
 def eval():
     with open('params.yaml', 'r') as f:
@@ -38,6 +38,10 @@ def eval():
 
     print(f'eval params - {params}')
     print(f'eval metrics - {metrics}')
+
+    mlflow.log_params(params)
+    mlflow.log_metrics(metrics)
+
 
 if __name__ == '__main__':
     eval()

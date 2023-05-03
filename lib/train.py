@@ -13,7 +13,10 @@ from sklearn import datasets
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score
+import mlflow
 
+mlflow.set_tracking_uri('http://158.160.11.51:90/')
+mlflow.set_experiment('aaa_test_size_exp')
 
 RANDOM_SEED = 1
 
@@ -93,6 +96,9 @@ def train():
 
     print(f'train params - {params}')
     print(f'train metrics - {metrics}')
+
+    mlflow.log_params(params)
+    mlflow.log_metrics(metrics)
 
 
 if __name__ == '__main__':
