@@ -7,7 +7,6 @@ import seaborn as sns
 import yaml
 
 from lib.train import load_dict, save_dict, METRICS
-import mlflow
 
 
 def eval():
@@ -39,10 +38,6 @@ def eval():
 
     print(f'eval params - {params}')
     print(f'eval metrics - {metrics}')
-
-    mlflow.log_params(params)
-    mlflow.log_metrics(metrics)
-
 
 if __name__ == '__main__':
     eval()

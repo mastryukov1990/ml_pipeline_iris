@@ -1,5 +1,5 @@
 train:
-  test_size: 0.8
+  test_size: 0.4
 
 eval:
   metrics:
