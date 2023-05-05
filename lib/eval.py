@@ -1,27 +1,19 @@
 import os.path
 import pickle
-from functools import partial
 
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 import yaml
-from sklearn.metrics import accuracy_score, precision_score, recall_score
+import mlflow
 
-from lib.train import load_dict, save_dict
-
-METRICS = {
-    'recall': partial(recall_score, average='micro'),
-    'precision': partial(precision_score, average='micro'),
-    'accuracy': accuracy_score,
-}
-
+from lib.train import load_dict, save_dict, METRICS
 
 def eval():
     with open('params.yaml', 'r') as f:
-        data = yaml.safe_load(f)
+        params_data = yaml.safe_load(f)
 
-    config = data['eval']
+    config = params_data['eval']
     with open('data/train/model.pkl', 'rb') as f:
         model = pickle.load(f)
 
@@ -39,6 +31,16 @@ def eval():
 
     sns.heatmap(pd.DataFrame(data['test_x']).corr())
     plt.savefig('data/eval/heatmap.png')
+
+    params = {'run_type': 'eval'}
+    for i in params_data.values():
+        params.update(i)
+
+    print(f'eval params - {params}')
+    print(f'eval metrics - {metrics}')
+
+    mlflow.log_params(params)
+    mlflow.log_metrics(metrics)
 
 
 if __name__ == '__main__':

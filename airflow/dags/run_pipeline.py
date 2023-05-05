@@ -1,5 +1,4 @@
-import os
-
+import pandas as pd
 from airflow import models
 from airflow.operators.python import PythonOperator
 from airflow.providers.docker.operators.docker import DockerOperator
@@ -21,7 +20,6 @@ class Key:
 
 class ConfigPusher:
     DEFAULT_CONFIG = {'command': 'dvc repro', 'MLFLOW_TRACKING_URI': 'http://51.250.108.121:90/'}
-    SERVICES = []
 
     def prepare_default(self, dag_run) -> dict:
         return {}
@@ -42,12 +40,12 @@ class ConfigPusher:
             task_instance.xcom_push(key=key, value=value)
 
 
-def get_data_dag(dag_id: str = 'test'):
+def get_data_dag(dag_id: str = 'test', image='tolkkk/irisr_simpe'):
     with models.DAG(
             dag_id=dag_id,
             start_date=datetime.datetime(2022, 4, 1),
             schedule='@once'
-    ) as dag:
+    ):
         config_operator = PythonOperator(
             task_id='config',
             python_callable=ConfigPusher(),
@@ -55,19 +53,33 @@ def get_data_dag(dag_id: str = 'test'):
         )
 
         load_data_operator = DockerOperator(
-            task_id='load_data',
-            image='tolkkk/irisr_simpe',
+            task_id='run_pipeline',
+            image=image,
             docker_url="unix://var/run/docker.sock",
             network_mode="bridge",
             command=get_config_value('config', 'command'),
             environment={
-                'MLFLOW_TRACKING_URI': get_config_value('config','MLFLOW_TRACKING_URI'),
+                'MLFLOW_TRACKING_URI': get_config_value('config', 'MLFLOW_TRACKING_URI'),
             }
 
         ),
 
-
         config_operator >> load_data_operator
 
 
+def get_custom_dags_df():
+    SHEET_ID = '17T1BDxLedpHHo7q4c7I7EPfnx0TXWc0T-Q6UWNCCZD8'
+    SHEET_NAME = 'airflow'
+
+    url = f'https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet={SHEET_NAME}'
+    return pd.read_csv(url)
+
+
+def create_custom_pipelines():
+    df = get_custom_dags_df()
+    for i, row in df.iterrows():
+        globals()[row['dag_id']] = get_data_dag(row['dag_id'], row['container'])
+
+
 globals()[DAG_ID] = get_data_dag(DAG_ID)
+create_custom_pipelines()

@@ -37,6 +37,8 @@ services:
         build: ./mlflow
         image: mlflow_server
         container_name: mlflow_server
+        env_file:
+            - web-variables.env
         expose:
             - 5000
         networks:
@@ -44,15 +46,10 @@ services:
             - backend
         environment:
             - BACKEND=postgresql://postgres:somepassword@db:5432/mlflowdb
-            - ARTIFACTS=/mlruns
+#            - ARTIFACTS=/mlruns
           # For artifact store in AWS S3 (note boto was installed in container):
-          #  - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-          #  - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-          #  - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
-          #  - ARTIFACTS="s3://mlflow_bucket/mlflow/"
         volumes:
             - mlrun_data:/mlruns
-
         command:
             - sh    # (sh allows for var substitution of BACKEND and ARTIFACTS)
             - -c
@@ -60,7 +57,8 @@ services:
                 --port 5000
                 --host 0.0.0.0 
                 --backend-store-uri $${BACKEND} 
-                --default-artifact-root $${ARTIFACTS}
+                --artifacts-destination $${_MLFLOW_SERVER_ARTIFACT_DESTINATION}
+                --serve-artifacts
         depends_on:
             - db
 
