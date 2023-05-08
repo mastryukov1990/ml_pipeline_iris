@@ -38,8 +38,6 @@ def eval():
     sns.heatmap(pd.DataFrame(data['test_x']).corr())
     plt.savefig('data/eval/heatmap.png')
 
-    figure = sns.heatmap(pd.DataFrame(data['test_x']).corr())
-
     params = {'run_type': 'eval'}
     for i in params_data.values():
         params.update(i)
@@ -49,9 +47,7 @@ def eval():
 
     mlflow.log_params(params)
     mlflow.log_metrics(metrics)
-    mlflow.log_figure(figure, os.path.join(task_dir, 'heatmap.png'))
-    mlflow.sklearn.log_model(model, os.path.join(task_dir, 'model.pkl'))
-    mlflow.log_dict(cls_report, os.path.join(task_dir, 'cls_report.json'))
+    mlflow.log_artifacts(task_dir)
 
 
 if __name__ == '__main__':
