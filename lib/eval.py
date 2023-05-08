@@ -47,8 +47,8 @@ def eval():
 
     mlflow.log_params(params)
     mlflow.log_metrics(metrics)
-    mlflow.log_artifacts(task_dir)
 
 
 if __name__ == '__main__':
     eval()
+    mlflow.log_artifacts('data/eval')
