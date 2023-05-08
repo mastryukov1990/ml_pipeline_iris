@@ -30,7 +30,7 @@ def eval():
     for metric_name in config['metrics']:
         metrics[metric_name] = METRICS[metric_name](data['test_y'], preds)
 
-    cls_report = classification_report(data['test_y'], preds)
+    cls_report = classification_report(data['test_y'], preds, output_dict=True)
 
     save_dict(metrics, 'data/metrics.json')
     save_dict(cls_report, os.path.join(task_dir, 'cls_report.json'))
@@ -51,4 +51,7 @@ def eval():
 
 if __name__ == '__main__':
     eval()
-    mlflow.log_artifacts('data/eval')
+    artifacts = ["heatmap.png", "cls_report.json"]
+    for artifact in artifacts:
+        mlflow.log_artifact(os.path.join("data/eval", artifact))
+    mlflow.log_artifact(os.path.join("data/train/model.pkl"))

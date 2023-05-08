@@ -12,6 +12,12 @@ import yaml
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import LinearSVC
+from catboost import CatBoostClassifier
+
 from sklearn.metrics import accuracy_score, precision_score, recall_score, classification_report
 import mlflow
 
@@ -29,6 +35,15 @@ METRICS = {
     'accuracy': accuracy_score,
 }
 
+MODELS = {
+    'decision_tree': DecisionTreeClassifier(),
+    'random_forest': RandomForestClassifier(),
+    'knn': KNeighborsClassifier(),
+    'logistic_regression': LogisticRegression(),
+    'svm': LinearSVC(),
+    'catboost': CatBoostClassifier(),
+}
+
 
 def save_dict(data: dict, filename: str):
     with open(filename, 'w') as f:
@@ -40,8 +55,8 @@ def load_dict(filename: str):
         return json.load(f)
 
 
-def train_model(x, y):
-    model = DecisionTreeClassifier()
+def train_model(x, y, model_name):
+    model = MODELS[model_name]
     model.fit(x, y)
     return model
 
@@ -52,15 +67,15 @@ def train():
 
     config = params_data['train']
 
-    iris = datasets.load_iris()
+    iris = datasets.load_iris(as_frame=True)
     task_dir = 'data/train'
 
-    x = iris['data'].tolist()
+    x = iris['data'][config['features']].values
     y = iris['target'].tolist()
 
     train_x, test_x, train_y, test_y = train_test_split(x, y, test_size=config['test_size'])
 
-    model = train_model(train_x, train_y)
+    model = train_model(train_x, train_y, config['model'])
 
     preds = model.predict(x)
 
@@ -75,7 +90,7 @@ def train():
         'test_y': test_y,
     }
 
-    cls_report = classification_report(y, preds)
+    cls_report = classification_report(y, preds, output_dict=True)
 
     if not os.path.exists(task_dir):
         os.mkdir(task_dir)
@@ -106,4 +121,6 @@ def train():
 
 if __name__ == '__main__':
     train()
-    mlflow.log_artifacts('data/train')
+    artifacts = ["model.pkl", "heatmap.png", "cls_report.json"]
+    for artifact in artifacts:
+        mlflow.log_artifact(os.path.join("data/train", artifact))
