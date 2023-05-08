@@ -88,8 +88,6 @@ def train():
 
     plt.savefig('data/train/heatmap.png')
 
-    figure = sns.heatmap(pd.DataFrame(train_x).corr())
-
     with open('data/train/model.pkl', 'wb') as f:
         pickle.dump(model, f)
 
@@ -104,9 +102,7 @@ def train():
 
     mlflow.log_params(params)
     mlflow.log_metrics(metrics)
-    mlflow.log_figure(figure, os.path.join(task_dir, 'heatmap.png'))
-    mlflow.sklearn.log_model(model, os.path.join(task_dir, 'model.pkl'))
-    mlflow.log_dict(cls_report, os.path.join(task_dir, 'cls_report.json'))
+    mlflow.log_artifacts(task_dir)
 
 if __name__ == '__main__':
     train()
