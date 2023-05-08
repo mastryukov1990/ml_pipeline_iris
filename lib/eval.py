@@ -8,6 +8,7 @@ import yaml
 import mlflow
 
 from lib.train import load_dict, save_dict, METRICS
+from sklearn.metrics import classification_report
 
 def eval():
     with open('params.yaml', 'r') as f:
@@ -23,14 +24,21 @@ def eval():
     if not os.path.exists('data/eval'):
         os.mkdir('data/eval')
 
+    task_dir = 'data/eval'
+
     metrics = {}
     for metric_name in config['metrics']:
         metrics[metric_name] = METRICS[metric_name](data['test_y'], preds)
 
+    cls_report = classification_report(data['test_y'], preds)
+
     save_dict(metrics, 'data/metrics.json')
+    save_dict(cls_report, os.path.join(task_dir, 'cls_report.json'))
 
     sns.heatmap(pd.DataFrame(data['test_x']).corr())
     plt.savefig('data/eval/heatmap.png')
+
+    figure = sns.heatmap(pd.DataFrame(data['test_x']).corr())
 
     params = {'run_type': 'eval'}
     for i in params_data.values():
@@ -41,6 +49,9 @@ def eval():
 
     mlflow.log_params(params)
     mlflow.log_metrics(metrics)
+    mlflow.log_figure(figure, os.path.join(task_dir, 'heatmap.png'))
+    mlflow.sklearn.log_model(model, os.path.join(task_dir, 'model.pkl'))
+    mlflow.log_dict(cls_report, os.path.join(task_dir, 'cls_report.json'))
 
 
 if __name__ == '__main__':

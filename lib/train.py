@@ -12,7 +12,7 @@ import yaml
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import accuracy_score, precision_score, recall_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, classification_report
 import mlflow
 
 mlflow.set_tracking_uri('http://158.160.11.51:90/')
@@ -75,15 +75,20 @@ def train():
         'test_y': test_y,
     }
 
+    cls_report = classification_report(y, preds)
+
     if not os.path.exists(task_dir):
         os.mkdir(task_dir)
 
     save_dict(save_data, os.path.join(task_dir, 'data.json'))
     save_dict(metrics, os.path.join(task_dir, 'metrics.json'))
+    save_dict(cls_report, os.path.join(task_dir, 'cls_report.json'))
 
     sns.heatmap(pd.DataFrame(train_x).corr())
 
     plt.savefig('data/train/heatmap.png')
+
+    figure = sns.heatmap(pd.DataFrame(train_x).corr())
 
     with open('data/train/model.pkl', 'wb') as f:
         pickle.dump(model, f)
@@ -99,7 +104,9 @@ def train():
 
     mlflow.log_params(params)
     mlflow.log_metrics(metrics)
-
+    mlflow.log_figure(figure, os.path.join(task_dir, 'heatmap.png'))
+    mlflow.sklearn.log_model(model, os.path.join(task_dir, 'model.pkl'))
+    mlflow.log_dict(cls_report, os.path.join(task_dir, 'cls_report.json'))
 
 if __name__ == '__main__':
     train()
