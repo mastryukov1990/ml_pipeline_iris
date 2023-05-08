@@ -102,7 +102,8 @@ def train():
 
     mlflow.log_params(params)
     mlflow.log_metrics(metrics)
-    mlflow.log_artifacts(task_dir)
+
 
 if __name__ == '__main__':
     train()
+    mlflow.log_artifacts('data/train')
