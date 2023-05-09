@@ -54,4 +54,4 @@ if __name__ == '__main__':
     artifacts = ["heatmap.png", "cls_report.json"]
     for artifact in artifacts:
         mlflow.log_artifact(os.path.join("data/eval", artifact))
-    mlflow.log_artifact(os.path.join("data/train/model.pkl"))
+    mlflow.log_artifact("data/train/model.pkl")

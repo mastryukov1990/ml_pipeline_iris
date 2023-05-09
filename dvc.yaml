@@ -2,7 +2,9 @@ stages:
   train:
     cmd: PYTHONPATH="." python lib/train.py --config-path params.yaml
     params:
-      - train
+      - train.test_size
+      - train.model
+      - train.features
     deps:
       - lib/train.py
     outs:
