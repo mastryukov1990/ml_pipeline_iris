@@ -60,8 +60,8 @@ def get_data_dag(dag_id: str = 'test', image='tolkkk/irisr_simpe'):
             command=get_config_value('config', 'command'),
             environment={
                 'MLFLOW_TRACKING_URI': get_config_value('config', 'MLFLOW_TRACKING_URI'),
-            }
-
+            },
+            force_pull=True,
         ),
 
         config_operator >> load_data_operator
