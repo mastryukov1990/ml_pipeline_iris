@@ -39,7 +39,7 @@ def features_preparation():
 
     iris = datasets.load_iris(as_frame=True)
 
-    features = [FEATURES_MASK[f] for f in config['features'].strip('[]').split(', ')]
+    features = [FEATURES_MASK[f] for f in config['features']]
 
     x = iris['data'][features].values.tolist()
     y = iris['target'].tolist()
