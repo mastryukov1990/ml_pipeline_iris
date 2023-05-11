@@ -69,4 +69,4 @@ def features_preparation():
 
 
 if __name__ == '__main__':
-    train()
+    features_preparation()
