@@ -1,6 +1,6 @@
 features_preparation:
   test_size: 0.9
-  features: '1111'
+  features: '[sepal_length, sepal_width, petal_length, petal_width]'
 
 train:
   model: decision_tree
