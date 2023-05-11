@@ -17,13 +17,6 @@ RANDOM_SEED = 1
 random.seed(RANDOM_SEED)
 np.random.seed(RANDOM_SEED)
 
-FEATURES_MASK = {
-    'sepal_length': 'sepal length (cm)',
-    'sepal_width': 'sepal width (cm)',
-    'petal_length': 'petal length (cm)',
-    'petal_width': 'petal width (cm)',
-}
-
 
 def save_dict(data: dict, filename: str):
     with open(filename, 'w') as f:
@@ -39,7 +32,7 @@ def features_preparation():
 
     iris = datasets.load_iris(as_frame=True)
 
-    features = [FEATURES_MASK[feature] for feature in config['features']]
+    features = [iris.columns[i] for i in range(4) if int(config['features'][i])]
 
     x = iris['data'][features].values.tolist()
     y = iris['target'].tolist()
