@@ -9,8 +9,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import yaml
-from sklearn import datasets
-from sklearn.model_selection import train_test_split
+
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
@@ -35,7 +34,7 @@ METRICS = {
     'accuracy': accuracy_score,
 }
 
-MODELS = {
+MODELS_MASK = {
     'decision_tree': DecisionTreeClassifier(),
     'random_forest': RandomForestClassifier(),
     'knn': KNeighborsClassifier(),
@@ -56,7 +55,7 @@ def load_dict(filename: str):
 
 
 def train_model(x, y, model_name):
-    model = MODELS[model_name]
+    model = MODELS_MASK[model_name]
     model.fit(x, y)
     return model
 
@@ -66,36 +65,22 @@ def train():
         params_data = yaml.safe_load(f)
 
     config = params_data['train']
-
-    iris = datasets.load_iris(as_frame=True)
     task_dir = 'data/train'
 
-    x = iris['data'][config['features']].values
-    y = iris['target'].tolist()
+    data = load_dict('data/features_preparation/data.json')
+    model = train_model(data['train_x'], data['train_y'], config['model'])
 
-    train_x, test_x, train_y, test_y = train_test_split(x, y, test_size=config['test_size'])
-
-    model = train_model(train_x, train_y, config['model'])
-
-    preds = model.predict(x)
+    preds = model.predict(data['train_x'])
 
     metrics = {}
     for metric_name in params_data['eval']['metrics']:
-        metrics[metric_name] = METRICS[metric_name](y, preds)
+        metrics[metric_name] = METRICS[metric_name](data['train_y'], preds)
 
-    save_data = {
-        'train_x': train_x,
-        'test_x': test_x,
-        'train_y': train_y,
-        'test_y': test_y,
-    }
-
-    cls_report = classification_report(y, preds, output_dict=True)
+    cls_report = classification_report(data['train_y'], preds, output_dict=True)
 
     if not os.path.exists(task_dir):
         os.mkdir(task_dir)
 
-    save_dict(save_data, os.path.join(task_dir, 'data.json'))
     save_dict(metrics, os.path.join(task_dir, 'metrics.json'))
     save_dict(cls_report, os.path.join(task_dir, 'cls_report.json'))
 
@@ -103,8 +88,13 @@ def train():
 
     plt.savefig('data/train/heatmap.png')
 
-    with open('data/train/model.pkl', 'wb') as f:
-        pickle.dump(model, f)
+    if config['model'] == 'catboost':
+        model.save_model(os.path.join(task_dir, "catboost_model",))
+        mlflow.catboost.log_model(model, "catboost_model")
+    else:
+        with open('data/train/model.pkl', 'wb') as f:
+            pickle.dump(model, f)
+        mlflow.sklearn.log_model(model, "model.pkl")
 
     params = {}
     for i in params_data.values():
@@ -117,10 +107,9 @@ def train():
 
     mlflow.log_params(params)
     mlflow.log_metrics(metrics)
+    mlflow.log_artifact(os.path.join(task_dir, "heatmap.png",))
+    mlflow.log_artifact(os.path.join(task_dir, "cls_report.json"))
 
 
 if __name__ == '__main__':
     train()
-    artifacts = ["model.pkl", "heatmap.png", "cls_report.json"]
-    for artifact in artifacts:
-        mlflow.log_artifact(os.path.join("data/train", artifact))
