@@ -84,7 +84,7 @@ def train():
     save_dict(metrics, os.path.join(task_dir, 'metrics.json'))
     save_dict(cls_report, os.path.join(task_dir, 'cls_report.json'))
 
-    sns.heatmap(pd.DataFrame(train_x).corr())
+    sns.heatmap(pd.DataFrame(data['train_x']).corr())
 
     plt.savefig('data/train/heatmap.png')
 
