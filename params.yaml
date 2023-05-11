@@ -1,7 +1,13 @@
-train:
+features_preparation:
   test_size: 0.9
-  model: 'decision_tree'
-  features: ['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)']
+  features:
+    - sepal_length
+    - sepal_width
+    - petal_length
+    - petal_width
+
+train:
+  model: decision_tree
 
 eval:
   metrics:

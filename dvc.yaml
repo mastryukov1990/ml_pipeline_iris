@@ -1,21 +1,31 @@
 stages:
-  train:
-    cmd: PYTHONPATH="." python lib/train.py --config-path params.yaml
+  features_preparation:
+    cmd: PYTHONPATH="." python3 lib/features_preparation.py --config-path params.yaml
     params:
-      - train.test_size
+      - features_preparation.test_size
+      - features_preparation.features
+    deps:
+      - lib/features_preparation.py
+    outs:
+      - data/features_preparation
+
+  train:
+    cmd: PYTHONPATH="." python3 lib/train.py --config-path params.yaml
+    params:
       - train.model
-      - train.features
     deps:
       - lib/train.py
+      - data/features_preparation
     outs:
       - data/train
 
   eval:
-    cmd: PYTHONPATH="." python lib/eval.py --config-path params.yaml
+    cmd: PYTHONPATH="." python3 lib/eval.py --config-path params.yaml
     params:
       - eval
     deps:
       - lib/eval.py
+      - data/features_preparation
       - data/train
     outs:
       - data/eval

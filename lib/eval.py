@@ -9,16 +9,22 @@ import mlflow
 
 from lib.train import load_dict, save_dict, METRICS
 from sklearn.metrics import classification_report
+from catboost import CatBoostClassifier
 
 def eval():
     with open('params.yaml', 'r') as f:
         params_data = yaml.safe_load(f)
 
     config = params_data['eval']
-    with open('data/train/model.pkl', 'rb') as f:
-        model = pickle.load(f)
 
-    data = load_dict('data/train/data.json')
+    if params_data['train']['model'] == 'catboost':
+        model = CatBoostClassifier()
+        model.load('data/train/catboost_model')
+    else:
+        with open('data/train/model.pkl', 'rb') as f:
+            model = pickle.load(f)
+
+    data = load_dict('data/features_preparation/data.json')
     preds = model.predict(data['test_x'])
 
     if not os.path.exists('data/eval'):
@@ -48,10 +54,14 @@ def eval():
     mlflow.log_params(params)
     mlflow.log_metrics(metrics)
 
+    if params_data['train']['model'] == 'catboost':
+        mlflow.catboost.log_model(model, "catboost_model")
+    else:
+        mlflow.sklearn.log_model(model, "model.pkl")
+
+    mlflow.log_artifact(os.path.join(task_dir, "heatmap.png"))
+    mlflow.log_artifact(os.path.join(task_dir, "cls_report.json"))
+
 
 if __name__ == '__main__':
     eval()
-    artifacts = ["heatmap.png", "cls_report.json"]
-    for artifact in artifacts:
-        mlflow.log_artifact(os.path.join("data/eval", artifact))
-    mlflow.log_artifact("data/train/model.pkl")
