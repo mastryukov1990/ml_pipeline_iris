@@ -6,8 +6,10 @@ import pandas as pd
 import seaborn as sns
 import yaml
 import mlflow
+from sklearn.metrics import classification_report
 
 from lib.train import load_dict, save_dict, METRICS
+
 
 def eval():
     with open('params.yaml', 'r') as f:
@@ -41,7 +43,12 @@ def eval():
 
     mlflow.log_params(params)
     mlflow.log_metrics(metrics)
+    mlflow.log_artifact('data/train/heatmap.png')
+    mlflow.sklearn.log_model(model, "my_model")
 
+    clsf_report = pd.DataFrame(classification_report(data['test_y'], preds, output_dict=True))
+    clsf_report.to_json('classification_report.json')
+    mlflow.log_artifact('classification_report.json')
 
 if __name__ == '__main__':
     eval()
