@@ -160,27 +160,27 @@ stages:
     cmd: PYTHONPATH="." python lib/train.py --config-path params.yaml
     deps:
     - path: lib/train.py
-      md5: a67c51ae561cf74f3eac2f584c8dbb5c
-      size: 2378
+      md5: d1cbada5dbc82f2cdf03e2324d63a398
+      size: 3247
     params:
       params.yaml:
         train:
-          test_size: 0.9
+          model: DecisionTree
     outs:
     - path: data/train
-      md5: 20ba93585ac7732c3ce57ff29b680045.dir
-      size: 16130
+      md5: 5bed614306f306b5d8c21881c64029f4.dir
+      size: 12700
       nfiles: 4
   eval:
     cmd: PYTHONPATH="." python lib/eval.py --config-path params.yaml
     deps:
     - path: data/train
-      md5: 20ba93585ac7732c3ce57ff29b680045.dir
-      size: 16130
+      md5: 5bed614306f306b5d8c21881c64029f4.dir
+      size: 12700
       nfiles: 4
     - path: lib/eval.py
-      md5: 0182d6ec302c0f451b0f284ee7d6e3d3
-      size: 1100
+      md5: f04bb95f8350a3c7ac5a02fb9dc50664
+      size: 1607
     params:
       params.yaml:
         eval:
@@ -190,9 +190,29 @@ stages:
           - accuracy
     outs:
     - path: data/eval
-      md5: 1c6160cb43e067815bf2c14fc137ed92.dir
-      size: 10791
-      nfiles: 1
+      md5: 1bb0f4ad930b91bde200463d5a77cfc0.dir
+      size: 11434
+      nfiles: 2
     - path: data/metrics.json
-      md5: 9b5b5d38d92b7e83182b739a14bcfdb7
-      size: 94
+      md5: ae1c2799d9aaa11efd57125f29bbcb07
+      size: 93
+  preprocessing:
+    cmd: PYTHONPATH="." python lib/preprocessing.py --config-path params.yaml
+    deps:
+    - path: lib/preprocessing.py
+      md5: aa07b89b9790c705d0179cbf5c32162e
+      size: 1488
+    params:
+      params.yaml:
+        preprocessing:
+          features:
+          - sepal_length
+          - sepal_width
+          - petal_length
+          - petal_width
+          test_size: 0.9
+    outs:
+    - path: data/preprocessing
+      md5: 8457ea95bd04fd531603f84d3b2f4546.dir
+      size: 3800
+      nfiles: 1

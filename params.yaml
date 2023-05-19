@@ -1,5 +1,9 @@
-train:
+preprocessing:
+  features: ['sepal_length', 'sepal_width', 'petal_length', 'petal_width']
   test_size: 0.9
+
+train:
+  model: DecisionTree
 
 eval:
   metrics:

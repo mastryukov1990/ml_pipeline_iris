@@ -12,11 +12,19 @@ import yaml
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score, precision_score, recall_score
+from sklearn.metrics import classification_report
 import mlflow
 
+from lib.preprocessing import IRIS_TARGET_NAMES
+
+
 mlflow.set_tracking_uri('http://158.160.11.51:90/')
-mlflow.set_experiment('aaa_test_size_exp')
+mlflow.set_experiment('pokroy')
 
 RANDOM_SEED = 1
 
@@ -27,6 +35,14 @@ METRICS = {
     'recall': partial(recall_score, average='macro'),
     'precision': partial(precision_score, average='macro'),
     'accuracy': accuracy_score,
+}
+
+MODELS = {
+    'DecisionTree': DecisionTreeClassifier,
+    'RandomForest': RandomForestClassifier,
+    'NaiveBayes': GaussianNB,
+    'SVM': SVC,
+    'KNN': KNeighborsClassifier
 }
 
 
@@ -40,8 +56,11 @@ def load_dict(filename: str):
         return json.load(f)
 
 
-def train_model(x, y):
-    model = DecisionTreeClassifier()
+def train_model(model_class, x, y):
+    if model_class in MODELS:
+        model = MODELS[model_class]()
+    else:
+        raise ValueError(f'Unknown model - {model_class}')
     model.fit(x, y)
     return model
 
@@ -51,37 +70,30 @@ def train():
         params_data = yaml.safe_load(f)
 
     config = params_data['train']
-
-    iris = datasets.load_iris()
     task_dir = 'data/train'
 
-    x = iris['data'].tolist()
-    y = iris['target'].tolist()
+    data = load_dict('data/preprocessing/data.json')
 
-    train_x, test_x, train_y, test_y = train_test_split(x, y, test_size=config['test_size'])
+    model = train_model(config['model'], data['train_x'], data['train_y'])
 
-    model = train_model(train_x, train_y)
-
-    preds = model.predict(x)
+    preds = model.predict(data['train_x'])
 
     metrics = {}
     for metric_name in params_data['eval']['metrics']:
-        metrics[metric_name] = METRICS[metric_name](y, preds)
+        metrics[metric_name] = METRICS[metric_name](data['train_y'], preds)
 
-    save_data = {
-        'train_x': train_x,
-        'test_x': test_x,
-        'train_y': train_y,
-        'test_y': test_y,
-    }
+    report = classification_report(data['train_y'], preds,
+                                   target_names=IRIS_TARGET_NAMES,
+                                   output_dict=True)
 
     if not os.path.exists(task_dir):
         os.mkdir(task_dir)
 
-    save_dict(save_data, os.path.join(task_dir, 'data.json'))
     save_dict(metrics, os.path.join(task_dir, 'metrics.json'))
 
-    sns.heatmap(pd.DataFrame(train_x).corr())
+    save_dict(report, os.path.join(task_dir, 'classification_report.json'))
+
+    sns.heatmap(pd.DataFrame(data['train_x']).corr())
 
     plt.savefig('data/train/heatmap.png')
 
@@ -99,6 +111,10 @@ def train():
 
     mlflow.log_params(params)
     mlflow.log_metrics(metrics)
+    mlflow.log_artifact('data/train/heatmap.png')
+    mlflow.sklearn.log_model(model, 'model')
+    mlflow.log_artifact(os.path.join(task_dir, 'classification_report.json'))
+
 
 
 if __name__ == '__main__':
