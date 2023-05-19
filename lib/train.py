@@ -44,7 +44,7 @@ def load_dict(filename: str):
 
 
 def choice_model(model_name):
-    if model_name == 'DecisionTreeClassifier':
+    if model_name == 'decisiontreeclassifier':
         return DecisionTreeClassifier()
     elif model_name == 'randomforestclassifier':
         return RandomForestClassifier()
