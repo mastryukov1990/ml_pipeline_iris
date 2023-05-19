@@ -12,11 +12,14 @@ import yaml
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, precision_score, recall_score
+from sklearn.metrics import classification_report
 import mlflow
 
 mlflow.set_tracking_uri('http://158.160.11.51:90/')
-mlflow.set_experiment('aaa_test_size_exp')
+mlflow.set_experiment('avagapov')
 
 RANDOM_SEED = 1
 
@@ -26,7 +29,7 @@ np.random.seed(RANDOM_SEED)
 METRICS = {
     'recall': partial(recall_score, average='macro'),
     'precision': partial(precision_score, average='macro'),
-    'accuracy': accuracy_score,
+    'accuracy': accuracy_score
 }
 
 
@@ -40,10 +43,13 @@ def load_dict(filename: str):
         return json.load(f)
 
 
-def train_model(x, y):
-    model = DecisionTreeClassifier()
-    model.fit(x, y)
-    return model
+def choice_model(model_name):
+    if model_name == 'decisiontreeclassifier':
+        return DecisionTreeClassifier()
+    elif model_name == 'randomforestclassifier':
+        return RandomForestClassifier()
+    else:
+        return LogisticRegression()
 
 
 def train():
@@ -52,15 +58,17 @@ def train():
 
     config = params_data['train']
 
-    iris = datasets.load_iris()
+    model = choice_model(config['model'])
+
+    iris = datasets.load_iris(as_frame=True)
     task_dir = 'data/train'
 
-    x = iris['data'].tolist()
+    x = iris['data'][config['features']].values.tolist()
     y = iris['target'].tolist()
 
     train_x, test_x, train_y, test_y = train_test_split(x, y, test_size=config['test_size'])
 
-    model = train_model(train_x, train_y)
+    model.fit(train_x, train_y)
 
     preds = model.predict(x)
 
@@ -99,7 +107,12 @@ def train():
 
     mlflow.log_params(params)
     mlflow.log_metrics(metrics)
+    mlflow.log_artifact('data/train/heatmap.png')
+    mlflow.sklearn.log_model(model, "my_model")
 
+    clsf_report = pd.DataFrame(classification_report(y, preds, output_dict=True))
+    clsf_report.to_json('classification_report.json')
+    mlflow.log_artifact('classification_report.json')
 
 if __name__ == '__main__':
     train()

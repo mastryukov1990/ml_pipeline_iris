@@ -1,0 +1,1 @@
+docker run -it avagapov/aaa_iris_pipeline dvc repro

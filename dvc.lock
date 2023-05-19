@@ -157,30 +157,36 @@ stages:
           experiment_name: test1
           run_name: test_run_name
   train:
-    cmd: PYTHONPATH="." python lib/train.py --config-path params.yaml
+    cmd: PYTHONPATH="." python3 lib/train.py --config-path params.yaml
     deps:
     - path: lib/train.py
-      md5: a67c51ae561cf74f3eac2f584c8dbb5c
-      size: 2378
+      md5: c87f0302ddba4affbba776ecd2179fa1
+      size: 3104
     params:
       params.yaml:
         train:
           test_size: 0.9
+          model: DecisionTreeClassifier
+          features:
+          - sepal length (cm)
+          - sepal width (cm)
+          - petal length (cm)
+          - petal width (cm)
     outs:
     - path: data/train
-      md5: 20ba93585ac7732c3ce57ff29b680045.dir
+      md5: 85bdb98a51a0ab8e769778b49503f1b7.dir
       size: 16130
       nfiles: 4
   eval:
-    cmd: PYTHONPATH="." python lib/eval.py --config-path params.yaml
+    cmd: PYTHONPATH="." python3 lib/eval.py --config-path params.yaml
     deps:
     - path: data/train
-      md5: 20ba93585ac7732c3ce57ff29b680045.dir
+      md5: 85bdb98a51a0ab8e769778b49503f1b7.dir
       size: 16130
       nfiles: 4
     - path: lib/eval.py
-      md5: 0182d6ec302c0f451b0f284ee7d6e3d3
-      size: 1100
+      md5: 579643bd381df3dde72a108dfe76e32b
+      size: 1518
     params:
       params.yaml:
         eval:
@@ -190,7 +196,7 @@ stages:
           - accuracy
     outs:
     - path: data/eval
-      md5: 1c6160cb43e067815bf2c14fc137ed92.dir
+      md5: 7722da64d9e35daaf5d1e016ac8de5b1.dir
       size: 10791
       nfiles: 1
     - path: data/metrics.json
