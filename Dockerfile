@@ -10,6 +10,8 @@ RUN pip3 install --no-cache-dir -r $WORKDIR/requirements.txt
 
 COPY . $WORKDIR
 
+RUN git config --global user.email "email@gmail.com"
+RUN git config --global user.name "username"
 
 RUN jupyter contrib nbextension install --user && \
     jupyter nbextensions_configurator enable --user && \

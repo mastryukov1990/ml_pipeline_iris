@@ -1,7 +1,7 @@
 version: '3.8'
 services:
     aaa_ds_course:
-        image: tolkkk/irisr_simpe
+        image: pokroy/aaa-ml-pipelines:latest
         ports:
             - "8088:8088"
         volumes:
