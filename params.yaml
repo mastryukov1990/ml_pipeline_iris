@@ -1,5 +1,13 @@
-train:
+prepare:
   test_size: 0.9
+  features:
+    - sl
+    - sw
+    - pl
+    - pw
+
+train:
+  model: DecisionTreeClassifier
 
 eval:
   metrics:

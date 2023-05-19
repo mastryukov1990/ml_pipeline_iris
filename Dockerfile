@@ -8,6 +8,9 @@ COPY ./requirements.txt  $WORKDIR/
 
 RUN pip3 install --no-cache-dir -r $WORKDIR/requirements.txt
 
+RUN git config --global user.email "lexatref@gmail.com"
+RUN git config --global user.name "lexatref"
+
 COPY . $WORKDIR
 
 

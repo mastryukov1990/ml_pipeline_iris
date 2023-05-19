@@ -1,9 +1,19 @@
 stages:
+  prepare:
+    cmd: PYTHONPATH="." python lib/prepare.py --config-path params.yaml
+    params:
+      - prepare
+    deps:
+      - lib/prepare.py
+    outs:
+      - data/prepare
+
   train:
     cmd: PYTHONPATH="." python lib/train.py --config-path params.yaml
     params:
       - train
     deps:
+      - data/prepare
       - lib/train.py
     outs:
       - data/train
@@ -15,6 +25,7 @@ stages:
     deps:
       - lib/eval.py
       - data/train
+      - data/prepare
     outs:
       - data/eval
     metrics:
