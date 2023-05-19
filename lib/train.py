@@ -33,6 +33,14 @@ def get_model(model_type):
     elif model_type == 'DecisionTree':
         from sklearn.tree import DecisionTreeClassifier
         model = DecisionTreeClassifier()
+    elif model_type == 'NaiveBayes':
+        from sklearn.naive_bayes import GaussianNB
+        model = GaussianNB()
+    elif model_type == 'SVM':
+        from sklearn.svm import SVC
+        model = SVC()
+    else:
+        raise ValueError('Not Supported type of model')
 
     return model
 
