@@ -9,14 +9,12 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import yaml
-from sklearn import datasets
-from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import accuracy_score, precision_score, recall_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, classification_report
 import mlflow
+from preprocessing import save_dict, get_data
 
 mlflow.set_tracking_uri('http://158.160.11.51:90/')
-mlflow.set_experiment('aaa_test_size_exp')
+mlflow.set_experiment('mmkuznecov')
 
 RANDOM_SEED = 1
 
@@ -26,22 +24,25 @@ np.random.seed(RANDOM_SEED)
 METRICS = {
     'recall': partial(recall_score, average='macro'),
     'precision': partial(precision_score, average='macro'),
-    'accuracy': accuracy_score,
+    'accuracy': accuracy_score
 }
+    
+def get_model(model_type):
+
+    if model_type == 'RandomForest':
+        from sklearn.ensemble import RandomForestClassifier
+        model = RandomForestClassifier()
+    elif model_type == 'DecisionTree':
+        from sklearn.tree import DecisionTreeClassifier
+        model = DecisionTreeClassifier()
+
+    return model
 
 
-def save_dict(data: dict, filename: str):
-    with open(filename, 'w') as f:
-        json.dump(data, f)
+def train_model(x, y, model_type):
 
+    model = get_model(model_type)
 
-def load_dict(filename: str):
-    with open(filename, 'r') as f:
-        return json.load(f)
-
-
-def train_model(x, y):
-    model = DecisionTreeClassifier()
     model.fit(x, y)
     return model
 
@@ -52,21 +53,19 @@ def train():
 
     config = params_data['train']
 
-    iris = datasets.load_iris()
     task_dir = 'data/train'
 
-    x = iris['data'].tolist()
-    y = iris['target'].tolist()
+    train_x, test_x, train_y, test_y = get_data()
 
-    train_x, test_x, train_y, test_y = train_test_split(x, y, test_size=config['test_size'])
+    model = train_model(train_x, train_y, config['model_type'])
 
-    model = train_model(train_x, train_y)
-
-    preds = model.predict(x)
+    preds = model.predict(train_x)
 
     metrics = {}
     for metric_name in params_data['eval']['metrics']:
-        metrics[metric_name] = METRICS[metric_name](y, preds)
+        metrics[metric_name] = METRICS[metric_name](train_y, preds)
+
+    report = classification_report(train_y, preds)
 
     save_data = {
         'train_x': train_x,
@@ -88,6 +87,9 @@ def train():
     with open('data/train/model.pkl', 'wb') as f:
         pickle.dump(model, f)
 
+    with open('data/train/classification_report.txt', 'w') as f:
+        f.write(report)
+
     params = {}
     for i in params_data.values():
         params.update(i)
@@ -99,6 +101,9 @@ def train():
 
     mlflow.log_params(params)
     mlflow.log_metrics(metrics)
+    mlflow.log_artifact('data/train/heatmap.png')
+    mlflow.log_artifact('data/train/classification_report.txt')
+    mlflow.sklearn.log_model(model, 'logged_model')
 
 
 if __name__ == '__main__':

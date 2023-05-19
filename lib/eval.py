@@ -7,7 +7,8 @@ import seaborn as sns
 import yaml
 import mlflow
 
-from lib.train import load_dict, save_dict, METRICS
+from lib.train import METRICS
+from preprocessing import load_dict, save_dict
 
 def eval():
     with open('params.yaml', 'r') as f:
