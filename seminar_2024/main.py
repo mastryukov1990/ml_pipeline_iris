@@ -18,7 +18,7 @@ import argparse
 
 
 
-def main(model_name: str):
+def main(model_name: str, run_name: str):
     features = ['sepal_len', 'sepal_wid', 'petal_len', 'petal_wid']
 
     iris = datasets.load_iris()
@@ -65,7 +65,7 @@ def main(model_name: str):
 
     mlflow.set_experiment('seminar-admastryukov')
 
-    with mlflow.start_run(run_name='full_model_params'):
+    with mlflow.start_run(run_name=run_name):
         mlflow.log_metrics(
             {
                 'prec': prec,
@@ -103,5 +103,7 @@ def main(model_name: str):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model-name', help='model name', default = 'LogisticRegressionCV')
+    parser.add_argument('--run-name', help='run name', default = 'test')
+
     args = parser.parse_args()
-    main(args.model_name)
+    main(args.model_name,  run_name = args.run_name)
