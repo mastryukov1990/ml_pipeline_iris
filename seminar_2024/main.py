@@ -1,6 +1,5 @@
 import os.path
 
-import pandas as pd
 from sklearn import datasets
 import pandas as pd
 
@@ -15,10 +14,11 @@ import mlflow
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+import argparse
 
 
-def main():
 
+def main(model_name: str):
     features = ['sepal_len', 'sepal_wid', 'petal_len', 'petal_wid']
 
     iris = datasets.load_iris()
@@ -33,8 +33,12 @@ def main():
 
     train_x, test_x, train_y, test_y = train_test_split(x[:, :], y, test_size=test_size, random_state=1)
 
-    model_name = 'LogisticRegressionCV'
-    model = LogisticRegressionCV(random_state=1)
+    if model_name == 'LogisticRegressionCV':
+        model = LogisticRegressionCV(random_state=1)
+
+    if model_name == 'DecisionTreeClassifier':
+        model = DecisionTreeClassifier(random_state=1)
+
     model.fit(train_x, train_y)
 
     pred_test_y = model.predict(test_x)
@@ -54,6 +58,7 @@ def main():
 
     if not os.path.exists('data'):
         os.mkdir('data')
+
     plt.savefig(f'data/corr.png')
 
     mlflow.set_tracking_uri('http://84.201.128.89:90/')
@@ -96,5 +101,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
-
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--model-name', help='model name', default = 'LogisticRegressionCV')
+    args = parser.parse_args()
+    main(args.model_name)
