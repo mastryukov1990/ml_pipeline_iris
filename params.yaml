@@ -1,5 +1,7 @@
 train:
   test_size: 0.9
+  model_type: "RandomForest"
+  features: ['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)']
 
 eval:
   metrics:
